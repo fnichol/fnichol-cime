@@ -1,0 +1,7 @@
+EXAMPLES:
+    Example 1 Greeting the Currently Logged In User
+
+      The following command will greet the currently logged in user, with a
+      shell that exports the `$USER` environment variable.
+
+        # fnicho-cime "$USER"
