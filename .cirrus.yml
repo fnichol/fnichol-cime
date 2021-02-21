@@ -191,7 +191,7 @@ task:
               - TARGET: i686-unknown-linux-musl
                 STRIP: i686-linux-musl-strip
               - TARGET: x86_64-unknown-linux-gnu
-                STRIP: x86_64-linux-gnu-strip
+                STRIP: strip
               - TARGET: x86_64-unknown-linux-musl
                 STRIP: x86_64-linux-musl-strip
             EXT: tar.gz
