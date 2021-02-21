@@ -54,7 +54,12 @@ anchors:
         echo "${CIRRUS_OS}"; cat Cargo.lock
 
   - &base_linux
-    install_dependencies_script: apt-get install -y unzip
+    install_dependencies_script: |
+      if command -v yum >/dev/null; then
+        yum install -y unzip
+      else
+        apt-get install -y unzip
+      fi
     <<: *base_unix
     <<: *install_cargo_make_unix
 
