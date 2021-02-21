@@ -83,7 +83,7 @@ args = ["make", "--list-all-steps"]
 description = "Runs all checks/tests required before pushing commits"
 dependencies = [
   "check",
-  "test",
+  "test-no-args",
 ]
 
 [tasks.release-prepare]
@@ -200,17 +200,34 @@ dependencies = [
   "test-bin",
 ]
 
+[tasks.test-no-args]
+private = true
+dependencies = [
+  "test-lib-no-args",
+  "test-bin-no-args",
+]
+
 [tasks.test-lib]
 description = "Runs all the library tests"
 category = "Test"
 command = "cargo"
 args = ["test", "--no-default-features", "--lib", "${@}"]
 
+[tasks.test-lib-no-args]
+private = true
+command = "cargo"
+args = ["test", "--no-default-features", "--lib"]
+
 [tasks.test-bin]
 description = "Runs all the binary tests"
 category = "Test"
 command = "cargo"
 args = ["test", "--bins", "${@}"]
+
+[tasks.test-bin-no-args]
+private = true
+command = "cargo"
+args = ["test", "--bins"]
 
 [tasks.verify-version-numbers]
 command = "cargo"

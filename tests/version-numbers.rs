@@ -7,7 +7,12 @@
 
 #[test]
 fn test_readme_deps() {
-    version_sync::assert_markdown_deps_updated!("README.md");
+    // If the current version is a `*-dev` string, then ignore the check in README. We'd like to
+    // keep the *last* released version string in the README as instructions in the main source
+    // code branch.
+    if !env!("CARGO_PKG_VERSION").ends_with("-dev") {
+        version_sync::assert_markdown_deps_updated!("README.md");
+    }
 }
 
 #[test]
