@@ -118,9 +118,9 @@ with the Rust distributions) before running:
 |            macOS | [![macOS Stable Test Status][badge-ci-test-stable-macos]][ci-main]     | [![macOS Nightly Test Status][badge-ci-test-nightly-macos]][ci-main]     |
 |          Windows | [![Windows Stable Test Status][badge-ci-test-stable-windows]][ci-main] | [![Windows Nightly Test Status][badge-ci-test-nightly-windows]][ci-main] |
 
-**Note**: The [Minimum Supported Rust Version
-(MSRV)](https://github.com/rust-lang/rfcs/pull/2495) is also tested and can be
-viewed in the [CI dashboard][ci-main].
+**Note**: The
+[Minimum Supported Rust Version (MSRV)](https://github.com/rust-lang/rfcs/pull/2495)
+is also tested and can be viewed in the [CI dashboard][ci-main].
 
 ### Check (main branch)
 
@@ -167,36 +167,63 @@ Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you, as defined in the MIT license, shall be
 licensed as above, without any additional terms or conditions.
 
-[badge-ci-build-x86_64-unknown-freebsd]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-freebsd
-[badge-ci-build-arm-unknown-linux-gnueabihf]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-arm-unknown-linux-gnueabihf
-[badge-ci-build-aarch64-unknown-linux-gnu]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-aarch64-unknown-linux-gnu
-[badge-ci-build-i686-unknown-linux-gnu]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-i686-unknown-linux-gnu
-[badge-ci-build-i686-unknown-linux-musl]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-i686-unknown-linux-musl
-[badge-ci-build-x86_64-unknown-linux-gnu]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-linux-gnu
-[badge-ci-build-x86_64-unknown-linux-musl]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-linux-musl
-[badge-ci-build-x86_64-apple-darwin]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-apple-darwin
-[badge-ci-build-x86_64-pc-windows-msvc]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-pc-windows-msvc
-[badge-ci-check-format]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=check&script=format
-[badge-ci-check-lint]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=check&script=lint
-[badge-ci-overall]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square
-[badge-ci-test-nightly-freebsd]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-unknown-freebsd
-[badge-ci-test-nightly-linux]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-unknown-linux-gnu
-[badge-ci-test-nightly-macos]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-apple-darwin
-[badge-ci-test-nightly-windows]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-pc-windows-msvc
-[badge-ci-test-stable-freebsd]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-unknown-freebsd
-[badge-ci-test-stable-linux]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-unknown-linux-gnu
-[badge-ci-test-stable-macos]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-apple-darwin
-[badge-ci-test-stable-windows]: https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-pc-windows-msvc
-[badge-crate-dl]: https://img.shields.io/crates/d/fnichol-cime.svg?style=flat-square
-[badge-docker-pulls]: https://img.shields.io/docker/pulls/fnichol/fnichol-cime.svg?style=flat-square
+[badge-ci-build-x86_64-unknown-freebsd]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-freebsd.tar.gz
+[badge-ci-build-arm-unknown-linux-gnueabihf]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-arm-unknown-linux-gnueabihf.tar.gz
+[badge-ci-build-aarch64-unknown-linux-gnu]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-aarch64-unknown-linux-gnu.tar.gz
+[badge-ci-build-i686-unknown-linux-gnu]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-i686-unknown-linux-gnu.tar.gz
+[badge-ci-build-i686-unknown-linux-musl]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-i686-unknown-linux-musl.tar.gz
+[badge-ci-build-x86_64-unknown-linux-gnu]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-linux-gnu.tar.gz
+[badge-ci-build-x86_64-unknown-linux-musl]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-linux-musl.tar.gz
+[badge-ci-build-x86_64-apple-darwin]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-apple-darwin.zip
+[badge-ci-build-x86_64-pc-windows-msvc]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-pc-windows-msvc.zip
+[badge-ci-check-format]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=check&script=format
+[badge-ci-check-lint]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=check&script=lint
+[badge-ci-overall]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square
+[badge-ci-test-nightly-freebsd]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-unknown-freebsd
+[badge-ci-test-nightly-linux]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-unknown-linux-gnu
+[badge-ci-test-nightly-macos]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-apple-darwin
+[badge-ci-test-nightly-windows]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-pc-windows-msvc
+[badge-ci-test-stable-freebsd]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-unknown-freebsd
+[badge-ci-test-stable-linux]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-unknown-linux-gnu
+[badge-ci-test-stable-macos]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-apple-darwin
+[badge-ci-test-stable-windows]:
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-pc-windows-msvc
+[badge-crate-dl]:
+  https://img.shields.io/crates/d/fnichol-cime.svg?style=flat-square
+[badge-docker-pulls]:
+  https://img.shields.io/docker/pulls/fnichol/fnichol-cime.svg?style=flat-square
 [badge-docs]: https://docs.rs/fnichol-cime/badge.svg?style=flat-square
-[badge-github-dl]: https://img.shields.io/github/downloads/fnichol/fnichol-cime/total.svg
-[badge-license]: https://img.shields.io/crates/l/fnichol-cime.svg?style=flat-square
-[badge-version]: https://img.shields.io/crates/v/fnichol-cime.svg?style=flat-square
-[changelog]: https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/CHANGELOG.md
+[badge-github-dl]:
+  https://img.shields.io/github/downloads/fnichol/fnichol-cime/total.svg
+[badge-license]:
+  https://img.shields.io/crates/l/fnichol-cime.svg?style=flat-square
+[badge-version]:
+  https://img.shields.io/crates/v/fnichol-cime.svg?style=flat-square
+[changelog]:
+  https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/CHANGELOG.md
 [ci]: https://cirrus-ci.com/github/fnichol/fnichol-cime
 [ci-main]: https://cirrus-ci.com/github/fnichol/fnichol-cime/main
-[code-of-conduct]: https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/CODE_OF_CONDUCT.md
+[code-of-conduct]:
+  https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/CODE_OF_CONDUCT.md
 [crate]: https://crates.io/crates/fnichol-cime
 [docker]: https://hub.docker.com/r/fnichol/fnichol-cime
 [docs]: https://docs.rs/fnichol-cime
@@ -204,4 +231,5 @@ licensed as above, without any additional terms or conditions.
 [github]: https://github.com/fnichol/fnichol-cime
 [github-releases]: https://github.com/fnichol/fnichol-cime/releases
 [issues]: https://github.com/fnichol/fnichol-cime/issues
-[license]: https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/LICENSE.txt
+[license]:
+  https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/LICENSE.txt

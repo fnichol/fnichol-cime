@@ -219,23 +219,23 @@ for inclusion in the work by you, as defined in the MIT license, shall be
 licensed as above, without any additional terms or conditions.
 
 [badge-ci-build-x86_64-unknown-freebsd]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-freebsd
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-freebsd.tar.gz
 [badge-ci-build-arm-unknown-linux-gnueabihf]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-arm-unknown-linux-gnueabihf
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-arm-unknown-linux-gnueabihf.tar.gz
 [badge-ci-build-aarch64-unknown-linux-gnu]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-aarch64-unknown-linux-gnu
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-aarch64-unknown-linux-gnu.tar.gz
 [badge-ci-build-i686-unknown-linux-gnu]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-i686-unknown-linux-gnu
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-i686-unknown-linux-gnu.tar.gz
 [badge-ci-build-i686-unknown-linux-musl]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-i686-unknown-linux-musl
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-i686-unknown-linux-musl.tar.gz
 [badge-ci-build-x86_64-unknown-linux-gnu]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-linux-gnu
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-linux-gnu.tar.gz
 [badge-ci-build-x86_64-unknown-linux-musl]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-linux-musl
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-unknown-linux-musl.tar.gz
 [badge-ci-build-x86_64-apple-darwin]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-apple-darwin
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-apple-darwin.zip
 [badge-ci-build-x86_64-pc-windows-msvc]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-pc-windows-msvc
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=bin-build-fnichol-cime-x86_64-pc-windows-msvc.zip
 [badge-ci-check-format]:
   https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=check&script=format
 [badge-ci-check-lint]:
