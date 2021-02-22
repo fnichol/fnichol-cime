@@ -122,8 +122,8 @@ greeting in english to a given subject. It is serious business.
 ## Library Usage
 
 This crate is on [crates.io](https://crates.io/crates/fnichol-cime) and can be
-used by adding `fnichol-cime` to your dependencies in your project's
-`Cargo.toml` file:
+used by adding the crate to your dependencies in your project's `Cargo.toml`
+file:
 
 ```toml
 [dependencies]
