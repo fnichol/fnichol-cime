@@ -26,3 +26,4 @@ post-release-replacements = [
 post-release-commit-message = "chore: start next iteration {{next_version}}"
 
 disable-publish = true
+disable-push = true

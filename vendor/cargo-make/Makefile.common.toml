@@ -91,8 +91,14 @@ description = "Prepares for a release"
 category = "Release"
 dependencies = [
   "prepush",
-  "install-cargo-release"
+  "release-invoke-cargo-release",
+  "release-push-branch",
 ]
+
+[tasks.release-invoke-cargo-release]
+description = "Invokes cargo release"
+category = "Release"
+dependencies = ["install-cargo-release"]
 command = "cargo"
 args = ["release", "${@}"]
 
@@ -110,6 +116,12 @@ description = "Create a Git release branch"
 category = "Release"
 command = "git"
 args = ["checkout", "-b", "release-${NEW_VERSION}"]
+
+[tasks.release-push-branch]
+description = "Pushes the current Git branch to the origin remote"
+category = "Release"
+command = "git"
+args = ["push", "origin", "HEAD"]
 
 [tasks.readme]
 description = "Generates, updates, & formats the README"
