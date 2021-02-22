@@ -29,7 +29,7 @@
 //! // #=> "Hello, Jane!"
 //! ```
 
-#![doc(html_root_url = "https://docs.rs/fnichol-cime/0.1.0")]
+#![doc(html_root_url = "https://docs.rs/fnichol-cime/0.1.1-dev")]
 #![deny(missing_docs)]
 
 /// Generates a greeting for a given subject.
