@@ -44,7 +44,6 @@ anchors:
       curl -sSfL https://sh.rustup.rs | sh -s -- \
         -y --default-toolchain none --profile minimal --no-modify-path
     install_rust_script: rustup default "$RUST_VERSION"
-
     cargo_cache:
       folder: $CARGO_HOME/registry
       fingerprint_script: |
@@ -85,7 +84,6 @@ anchors:
         DownloadString('https://gist.github.com/fnichol/699d3c2930649a9932f71bab8a315b31/raw/rustup-init.ps1')
         )) -y --default-toolchain none --profile minimal
     install_rust_script: rustup default "$env:RUST_VERSION"
-
     cargo_cache:
       folder: $CARGO_HOME\registry
       fingerprint_script: |
@@ -121,21 +119,25 @@ anchors:
         Remove-Item -Recurse -Force "$env:USERPROFILE\.cargo\registry\index"
       }
 # END: cirrus-anchors.yml
-
+#
+#
 env:
   RUST_VERSION: stable
   MIN_SUPPORTED_RUST_VERSION: 1.40.0 # Due to clap 3 beta.2 (mem::take)
 
-task:
+check_task:
   name: check
+  only_if: $CIRRUS_BRANCH !=~ ".*\.tmp"
   container:
     image: rust:latest
   <<: *base_linux
   lint_script: cargo make check-lint
   format_script: cargo make check-format
 
-task:
+test_task:
   name: test-${RUST_VERSION}-${TARGET}
+  alias: tests
+  only_if: $CIRRUS_BRANCH !=~ ".*\.tmp"
   env:
     matrix:
       - RUST_VERSION: stable
@@ -173,8 +175,12 @@ task:
       test_lib_script: cargo make test-lib -- "--target=$env:TARGET"
       <<: *cleanup_before_upload_cache_windows
 
-task:
-  name: bin-build-${BIN}-${TARGET}.${EXT}
+build_bin_task:
+  name: build-bin-${BIN}-${TARGET}.${EXT}
+  alias: build-bins-${BIN}
+  only_if:
+    $CIRRUS_TAG != '' || $CIRRUS_BRANCH == 'staging' || $CIRRUS_BRANCH ==
+    'trying'
   env:
     BIN: fnichol-cime
     RUST_BACKTRACE: 1
@@ -247,27 +253,31 @@ task:
       <<: *build_windows
       archive_script: |
         Compress-Archive "$env:BIN-$env:TARGET.exe" "$env:BIN-$env:TARGET.$env:EXT"
-      checksums_script: .\.ci\build-checksums.ps1 "$env:BIN-$env:TARGET.$env:EXT"
+      checksums_script:
+        .\.ci\build-checksums.ps1 "$env:BIN-$env:TARGET.$env:EXT"
       binaries_artifacts:
         path: "$BIN-$TARGET.$EXT*"
       <<: *cleanup_before_upload_cache_windows
 
-task:
-  name: release-${BIN}-artifacts
+ci_success_task:
+  name: ci-success
+  depends_on:
+    - check
+    - tests
+    - build-bins-fnichol-cime
+  container:
+    image: alpine:latest
+  clone_script: mkdir -p "$CIRRUS_WORKING_DIR"
+  success_script: /bin/true
+
+release_artifacts_task:
+  name: release-artifacts-${BIN}
+  only_if: $CIRRUS_TAG != ''
+  depends_on:
+    - build-bins-fnichol-cime
   env:
     BIN: fnichol-cime
     GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
-  only_if: $CIRRUS_TAG != ''
-  depends_on:
-    - bin-build-fnichol-cime-x86_64-apple-darwin.zip
-    - bin-build-fnichol-cime-x86_64-unknown-freebsd.tar.gz
-    - bin-build-fnichol-cime-aarch64-unknown-linux-gnu.tar.gz
-    - bin-build-fnichol-cime-arm-unknown-linux-gnueabihf.tar.gz
-    - bin-build-fnichol-cime-i686-unknown-linux-musl.tar.gz
-    - bin-build-fnichol-cime-x86_64-unknown-linux-musl.tar.gz
-    - bin-build-fnichol-cime-i686-unknown-linux-gnu.tar.gz
-    - bin-build-fnichol-cime-x86_64-unknown-linux-gnu.tar.gz
-    - bin-build-fnichol-cime-x86_64-pc-windows-msvc.zip
   install_dependencies_script: apk add curl jo jq
   create_github_release_script: |
     if ! upload_url="$(
@@ -285,9 +295,9 @@ task:
     mkdir -p /tmp/release
     cd /tmp/release
     awk '{ print $2 }' "$manifest" | while read -r a; do
-      "$cr" ci_download "bin-build-$a/binaries/$a"
-      "$cr" ci_download "bin-build-$a/binaries/$a.md5"
-      "$cr" ci_download "bin-build-$a/binaries/$a.sha256"
+      "$cr" ci_download "build-bin-$a/binaries/$a"
+      "$cr" ci_download "build-bin-$a/binaries/$a.md5"
+      "$cr" ci_download "build-bin-$a/binaries/$a.sha256"
     done
     cp "$manifest" .
     ls -l "$BIN"*
@@ -295,10 +305,11 @@ task:
     url="$(cat /tmp/upload_url)"
     ./.ci/cirrus-release.sh gh_upload_all "$url" /tmp/release
 
-docker_builder:
+build_docker_image_docker_builder:
+  name: build-docker-image-${BIN}
   only_if: $CIRRUS_TAG != ''
   depends_on:
-    - release-fnichol-cime-artifacts
+    - release-artifacts-fnichol-cime
   env:
     AUTHOR: Fletcher Nichol <fnichol@nichol.ca>
     LICENSE: MPL-2.0
@@ -317,15 +328,28 @@ docker_builder:
     - docker push "$IMG:${CIRRUS_TAG#v}"
     - docker push "$IMG:latest"
 
-task:
-  name: publish-crate
-  only_if: $CIRRUS_TAG != ''
+publish_create_task:
+  name: publish-crate-${CRATE}
+  only_if: $CIRRUS_TAG =~ 'v.*'
   depends_on:
-    - release-fnichol-cime-artifacts
+    - release-artifacts-fnichol-cime
   env:
+    CRATE: fnichol-cime
     CRATES_IO_TOKEN: ENCRYPTED[0c6ba7d0bd264cf02d59451d0135eb215d2774a9eb86e89dd9bfb3cab6a1c4aaa48a69edfb3d0ae6f4850441e6e591bb]
   container:
     image: rust:latest
   <<: *base_linux
   login_script: echo "$CRATES_IO_TOKEN" | cargo login
   publish_script: cargo publish
+
+release_success_task:
+  name: release-success
+  only_if: $CIRRUS_TAG != ''
+  depends_on:
+    - release-artifacts-fnichol-cime
+    - build-docker-image-fnichol-cime
+    - publish-crate-fnichol-cime
+  container:
+    image: alpine:latest
+  clone_script: mkdir -p "$CIRRUS_WORKING_DIR"
+  success_script: /bin/true
