@@ -179,7 +179,7 @@ test_task:
 
 build_bin_task:
   name: build-bin-${BIN}-${TARGET}.${EXT}
-  alias: build-bins-${BIN}
+  alias: build-bins
   only_if:
     $CIRRUS_TAG != '' || $CIRRUS_BRANCH == 'staging' || $CIRRUS_BRANCH ==
     'trying'
@@ -266,7 +266,7 @@ ci_success_task:
   depends_on:
     - check
     - tests
-    - build-bins-fnichol-cime
+    - build-bins
   container:
     image: alpine:latest
   clone_script: mkdir -p "$CIRRUS_WORKING_DIR"
@@ -274,9 +274,10 @@ ci_success_task:
 
 release_artifacts_task:
   name: release-artifacts-${BIN}
+  alias: release-artifacts
   only_if: $CIRRUS_TAG != ''
   depends_on:
-    - build-bins-fnichol-cime
+    - build-bins
   env:
     BIN: fnichol-cime
     GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
@@ -309,6 +310,7 @@ release_artifacts_task:
 
 build_docker_image_docker_builder:
   name: build-docker-image-${BIN}
+  alias: build-docker-images
   only_if: $CIRRUS_TAG != ''
   depends_on:
     - release-artifacts-fnichol-cime
@@ -332,6 +334,7 @@ build_docker_image_docker_builder:
 
 publish_create_task:
   name: publish-crate-${CRATE}
+  alias: publish-crates
   only_if: $CIRRUS_TAG =~ 'v.*'
   depends_on:
     - release-artifacts-fnichol-cime
@@ -348,9 +351,9 @@ release_success_task:
   name: release-success
   only_if: $CIRRUS_TAG != ''
   depends_on:
-    - release-artifacts-fnichol-cime
-    - build-docker-image-fnichol-cime
-    - publish-crate-fnichol-cime
+    - release-artifacts
+    - build-docker-images
+    - publish-crates
   container:
     image: alpine:latest
   clone_script: mkdir -p "$CIRRUS_WORKING_DIR"
