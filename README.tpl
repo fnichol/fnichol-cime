@@ -1,14 +1,14 @@
 # {{crate}}
 
-|                  |                                                         |
-| ---------------: | ------------------------------------------------------- |
-|               CI | [![CI Status][badge-ci-overall]][ci]                    |
-|   Latest Version | [![Latest version][badge-version]][crate]               |
-|    Documentation | [![Documentation][badge-docs]][docs]                    |
-|  Crate Downloads | [![Crate downloads][badge-crate-dl]][crate]             |
-| GitHub Downloads | [![Github downloads][badge-github-dl]][github-releases] |
-|     Docker Pulls | [![Docker pulls][badge-docker-pulls]][docker]           |
-|          License | [![Crate license][badge-license]][github]               |
+|                  |                                                                                    |
+| ---------------: | ---------------------------------------------------------------------------------- |
+|               CI | [![CI Status][badge-ci-overall]][ci] [![Bors enabled][badge-bors]][bors-dashboard] |
+|   Latest Version | [![Latest version][badge-version]][crate]                                          |
+|    Documentation | [![Documentation][badge-docs]][docs]                                               |
+|  Crate Downloads | [![Crate downloads][badge-crate-dl]][crate]                                        |
+| GitHub Downloads | [![Github downloads][badge-github-dl]][github-releases]                            |
+|     Docker Pulls | [![Docker pulls][badge-docker-pulls]][docker]                                      |
+|          License | [![Crate license][badge-license]][github]                                          |
 
 **Table of Contents**
 
@@ -167,6 +167,7 @@ Unless you explicitly state otherwise, any contribution intentionally submitted
 for inclusion in the work by you, as defined in the MIT license, shall be
 licensed as above, without any additional terms or conditions.
 
+[badge-bors]: https://bors.tech/images/badge_small.svg
 [badge-ci-build-x86_64-unknown-freebsd]:
   https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=build-bin-fnichol-cime-x86_64-unknown-freebsd.tar.gz
 [badge-ci-build-arm-unknown-linux-gnueabihf]:
@@ -218,6 +219,7 @@ licensed as above, without any additional terms or conditions.
   https://img.shields.io/crates/l/fnichol-cime.svg?style=flat-square
 [badge-version]:
   https://img.shields.io/crates/v/fnichol-cime.svg?style=flat-square
+[bors-dashboard]: https://app.bors.tech/repositories/32089
 [changelog]:
   https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/CHANGELOG.md
 [ci]: https://cirrus-ci.com/github/fnichol/fnichol-cime
