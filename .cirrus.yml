@@ -283,8 +283,8 @@ release_artifacts_task:
   name: release-artifacts-${BIN}
   alias: release-artifacts
   only_if: $CIRRUS_TAG != ''
-  depends_on:
-    - build-bins
+  # depends_on:
+  #   - build-bins
   env:
     BIN: fnichol-cime
     GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
