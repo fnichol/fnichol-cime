@@ -168,45 +168,45 @@ for inclusion in the work by you, as defined in the MIT license, shall be
 licensed as above, without any additional terms or conditions.
 
 [badge-ci-build-x86_64-unknown-freebsd]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=build-bin-fnichol-cime-x86_64-unknown-freebsd.tar.gz
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=build-bin-fnichol-cime-x86_64-unknown-freebsd.tar.gz
 [badge-ci-build-arm-unknown-linux-gnueabihf]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=build-bin-fnichol-cime-arm-unknown-linux-gnueabihf.tar.gz
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=build-bin-fnichol-cime-arm-unknown-linux-gnueabihf.tar.gz
 [badge-ci-build-aarch64-unknown-linux-gnu]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=build-bin-fnichol-cime-aarch64-unknown-linux-gnu.tar.gz
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=build-bin-fnichol-cime-aarch64-unknown-linux-gnu.tar.gz
 [badge-ci-build-i686-unknown-linux-gnu]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=build-bin-fnichol-cime-i686-unknown-linux-gnu.tar.gz
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=build-bin-fnichol-cime-i686-unknown-linux-gnu.tar.gz
 [badge-ci-build-i686-unknown-linux-musl]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=build-bin-fnichol-cime-i686-unknown-linux-musl.tar.gz
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=build-bin-fnichol-cime-i686-unknown-linux-musl.tar.gz
 [badge-ci-build-x86_64-unknown-linux-gnu]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=build-bin-fnichol-cime-x86_64-unknown-linux-gnu.tar.gz
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=build-bin-fnichol-cime-x86_64-unknown-linux-gnu.tar.gz
 [badge-ci-build-x86_64-unknown-linux-musl]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=build-bin-fnichol-cime-x86_64-unknown-linux-musl.tar.gz
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=build-bin-fnichol-cime-x86_64-unknown-linux-musl.tar.gz
 [badge-ci-build-x86_64-apple-darwin]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=build-bin-fnichol-cime-x86_64-apple-darwin.zip
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=build-bin-fnichol-cime-x86_64-apple-darwin.zip
 [badge-ci-build-x86_64-pc-windows-msvc]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=build-bin-fnichol-cime-x86_64-pc-windows-msvc.zip
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=build-bin-fnichol-cime-x86_64-pc-windows-msvc.zip
 [badge-ci-check-format]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=check&script=format
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=check&script=format
 [badge-ci-check-lint]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=check&script=lint
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=check&script=lint
 [badge-ci-overall]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/main?style=flat-square
 [badge-ci-test-nightly-freebsd]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-unknown-freebsd
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=test-nightly-x86_64-unknown-freebsd
 [badge-ci-test-nightly-linux]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-unknown-linux-gnu
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=test-nightly-x86_64-unknown-linux-gnu
 [badge-ci-test-nightly-macos]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-apple-darwin
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=test-nightly-x86_64-apple-darwin
 [badge-ci-test-nightly-windows]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-nightly-x86_64-pc-windows-msvc
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=test-nightly-x86_64-pc-windows-msvc
 [badge-ci-test-stable-freebsd]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-unknown-freebsd
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=test-stable-x86_64-unknown-freebsd
 [badge-ci-test-stable-linux]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-unknown-linux-gnu
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=test-stable-x86_64-unknown-linux-gnu
 [badge-ci-test-stable-macos]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-apple-darwin
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=test-stable-x86_64-apple-darwin
 [badge-ci-test-stable-windows]:
-  https://img.shields.io/cirrus/github/fnichol/fnichol-cime.svg?style=flat-square&task=test-stable-x86_64-pc-windows-msvc
+  https://img.shields.io/cirrus/github/fnichol/fnichol-cime/staging?style=flat-square&task=test-stable-x86_64-pc-windows-msvc
 [badge-crate-dl]:
   https://img.shields.io/crates/d/fnichol-cime.svg?style=flat-square
 [badge-docker-pulls]:
