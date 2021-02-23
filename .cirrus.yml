@@ -130,239 +130,238 @@ diagnose_task:
   container:
     image: rust:latest
   diagnose_script: printenv
-# check_task:
-#   name: check
-#   only_if:
-#     $CIRRUS_BRANCH !=~ ".*\.tmp" && $CIRRUS_BRANCH != $CIRRUS_DEFAULT_BRANCH
-#   container:
-#     image: rust:latest
-#   noop_script: printenv
-#   # <<: *base_linux
-#   # lint_script: cargo make check-lint
-#   # format_script: cargo make check-format
 
-# test_task:
-#   name: test-${RUST_VERSION}-${TARGET}
-#   alias: tests
-#   only_if:
-#     $CIRRUS_BRANCH !=~ ".*\.tmp" && $CIRRUS_BRANCH != $CIRRUS_DEFAULT_BRANCH
-#   env:
-#     matrix:
-#       - RUST_VERSION: stable
-#       # - RUST_VERSION: nightly
-#       # - RUST_VERSION: $MIN_SUPPORTED_RUST_VERSION
-#   # allow_failures: $RUST_VERSION == 'nightly'
-#   matrix:
-#     - matrix:
-#         - env:
-#             TARGET: x86_64-unknown-linux-gnu
-#           container:
-#             image: rust:latest
-#           # <<: *base_linux
-#         # - env:
-#         #   TARGET: x86_64-apple-darwin
-#         # osx_instance:
-#         #   image: catalina-base
-#         # <<: *base_macos
-#         # - env:
-#         #   TARGET: x86_64-unknown-freebsd
-#         # freebsd_instance:
-#         #   image_family: freebsd-11-4
-#         # <<: *base_freebsd
-#       noop_script: printenv
-#       # <<: *install_target_unix
-#       # test_bin_script: cargo make test-bin -- "--target=$TARGET"
-#       # test_lib_script: cargo make test-lib -- "--target=$TARGET"
-#       # <<: *cleanup_before_upload_cache_unix
-#     # - env:
-#     #     TARGET: x86_64-pc-windows-msvc
-#     #   windows_container:
-#     #     image: fnichol/windowsservercore:ltsc2019-vs2019-vctools
-#     #   <<: *base_windows
-#     #   <<: *install_target_windows
-#     #   test_bin_script: cargo make test-bin -- "--target=$env:TARGET"
-#     #   test_lib_script: cargo make test-lib -- "--target=$env:TARGET"
-#     #   <<: *cleanup_before_upload_cache_windows
+check_task:
+  name: check
+  only_if: $CIRRUS_BRANCH !=~ ".*\.tmp"
+  container:
+    image: rust:latest
+  noop_script: printenv
+  # <<: *base_linux
+  # lint_script: cargo make check-lint
+  # format_script: cargo make check-format
 
-# build_bin_task:
-#   name: build-bin-${BIN}-${TARGET}.${EXT}
-#   alias: build-bins
-#   only_if:
-#     $CIRRUS_TAG != '' || $CIRRUS_BRANCH == 'staging' || $CIRRUS_BRANCH ==
-#     'trying'
-#   env:
-#     BIN: fnichol-cime
-#     RUST_BACKTRACE: 1
-#   matrix:
-#     - matrix:
-#         - env:
-#             matrix:
-#               # - TARGET: arm-unknown-linux-gnueabihf
-#               #   STRIP: arm-linux-gnueabihf-strip
-#               # - TARGET: aarch64-unknown-linux-gnu
-#               #   STRIP: aarch64-linux-gnu-strip
-#               # - TARGET: i686-unknown-linux-gnu
-#               #   STRIP: x86_64-linux-gnu-strip
-#               # - TARGET: i686-unknown-linux-musl
-#               #   STRIP: i686-linux-musl-strip
-#               - TARGET: x86_64-unknown-linux-gnu
-#                 STRIP: strip
-#               # - TARGET: x86_64-unknown-linux-musl
-#               #   STRIP: x86_64-linux-musl-strip
-#             EXT: tar.gz
-#           container:
-#             image: rustembedded/cross:$TARGET
-#           depends_on:
-#             - check
-#             - test-stable-x86_64-unknown-linux-gnu
-#           noop_script: printenv
-#           # <<: *base_linux
-#           # <<: *install_target_unix
-#           # <<: *build_unix
-#           # archive_script: tar czf "$BIN-$TARGET.$EXT" "$BIN-$TARGET"
-#         # - env:
-#         #   TARGET: x86_64-apple-darwin
-#         #   STRIP: strip
-#         #   EXT: zip
-#         # osx_instance:
-#         #   image: catalina-base
-#         # depends_on:
-#         #   - check
-#         #   - test-stable-x86_64-apple-darwin
-#         # <<: *base_macos
-#         # <<: *install_target_unix
-#         # <<: *build_unix
-#         # archive_script: zip "$BIN-$TARGET" "$BIN-$TARGET"
-#         # - env:
-#         #   TARGET: x86_64-unknown-freebsd
-#         #   STRIP: strip
-#         #   EXT: tar.gz
-#         # freebsd_instance:
-#         #   image_family: freebsd-11-4
-#         # depends_on:
-#         #   - check
-#         #   - test-stable-x86_64-unknown-freebsd
-#         # <<: *base_freebsd
-#         # <<: *install_target_unix
-#         # <<: *build_unix
-#         # archive_script: tar czf "$BIN-$TARGET.$EXT" "$BIN-$TARGET"
-#       # checksums_script: ./.ci/build-checksums.sh "$BIN-$TARGET.$EXT"
-#       # binaries_artifacts:
-#       # path: "$BIN-$TARGET.$EXT*"
-#       # <<: *cleanup_before_upload_cache_unix
-#     # - env:
-#     # TARGET: x86_64-pc-windows-msvc
-#     # EXT: zip
-#     # windows_container:
-#     # image: fnichol/windowsservercore:ltsc2019-vs2019-vctools
-#     # depends_on:
-#     # - check
-#     # - test-stable-x86_64-pc-windows-msvc
-#     # <<: *base_windows
-#     # <<: *install_target_windows
-#     # <<: *build_windows
-#     # archive_script: |
-#     # Compress-Archive "$env:BIN-$env:TARGET.exe" "$env:BIN-$env:TARGET.$env:EXT"
-#     # checksums_script:
-#     # .\.ci\build-checksums.ps1 "$env:BIN-$env:TARGET.$env:EXT"
-#     # binaries_artifacts:
-#     # path: "$BIN-$TARGET.$EXT*"
-#     # <<: *cleanup_before_upload_cache_windows
+test_task:
+  name: test-${RUST_VERSION}-${TARGET}
+  alias: tests
+  only_if: $CIRRUS_BRANCH !=~ ".*\.tmp"
+  env:
+    matrix:
+      - RUST_VERSION: stable
+      # - RUST_VERSION: nightly
+      # - RUST_VERSION: $MIN_SUPPORTED_RUST_VERSION
+  # allow_failures: $RUST_VERSION == 'nightly'
+  matrix:
+    - matrix:
+        - env:
+            TARGET: x86_64-unknown-linux-gnu
+          container:
+            image: rust:latest
+          # <<: *base_linux
+        # - env:
+        #   TARGET: x86_64-apple-darwin
+        # osx_instance:
+        #   image: catalina-base
+        # <<: *base_macos
+        # - env:
+        #   TARGET: x86_64-unknown-freebsd
+        # freebsd_instance:
+        #   image_family: freebsd-11-4
+        # <<: *base_freebsd
+      noop_script: printenv
+      # <<: *install_target_unix
+      # test_bin_script: cargo make test-bin -- "--target=$TARGET"
+      # test_lib_script: cargo make test-lib -- "--target=$TARGET"
+      # <<: *cleanup_before_upload_cache_unix
+    # - env:
+    #     TARGET: x86_64-pc-windows-msvc
+    #   windows_container:
+    #     image: fnichol/windowsservercore:ltsc2019-vs2019-vctools
+    #   <<: *base_windows
+    #   <<: *install_target_windows
+    #   test_bin_script: cargo make test-bin -- "--target=$env:TARGET"
+    #   test_lib_script: cargo make test-lib -- "--target=$env:TARGET"
+    #   <<: *cleanup_before_upload_cache_windows
 
-# ci_success_task:
-#   name: ci-success
-#   depends_on:
-#     - check
-#     - tests
-#     - build-bins
-#   container:
-#     image: alpine:latest
-#   clone_script: mkdir -p "$CIRRUS_WORKING_DIR"
-#   success_script: /bin/true
+build_bin_task:
+  name: build-bin-${BIN}-${TARGET}.${EXT}
+  alias: build-bins
+  only_if:
+    $CIRRUS_TAG != '' || $CIRRUS_BRANCH == 'staging' || $CIRRUS_BRANCH ==
+    'trying' || $CIRRUS_BRANCH == $CIRRUS_DEFAULT_BRANCH
+  env:
+    BIN: fnichol-cime
+    RUST_BACKTRACE: 1
+  matrix:
+    - matrix:
+        - env:
+            matrix:
+              # - TARGET: arm-unknown-linux-gnueabihf
+              #   STRIP: arm-linux-gnueabihf-strip
+              # - TARGET: aarch64-unknown-linux-gnu
+              #   STRIP: aarch64-linux-gnu-strip
+              # - TARGET: i686-unknown-linux-gnu
+              #   STRIP: x86_64-linux-gnu-strip
+              # - TARGET: i686-unknown-linux-musl
+              #   STRIP: i686-linux-musl-strip
+              - TARGET: x86_64-unknown-linux-gnu
+                STRIP: strip
+              # - TARGET: x86_64-unknown-linux-musl
+              #   STRIP: x86_64-linux-musl-strip
+            EXT: tar.gz
+          container:
+            image: rustembedded/cross:$TARGET
+          depends_on:
+            - check
+            - test-stable-x86_64-unknown-linux-gnu
+          noop_script: printenv
+          # <<: *base_linux
+          # <<: *install_target_unix
+          # <<: *build_unix
+          # archive_script: tar czf "$BIN-$TARGET.$EXT" "$BIN-$TARGET"
+        # - env:
+        #   TARGET: x86_64-apple-darwin
+        #   STRIP: strip
+        #   EXT: zip
+        # osx_instance:
+        #   image: catalina-base
+        # depends_on:
+        #   - check
+        #   - test-stable-x86_64-apple-darwin
+        # <<: *base_macos
+        # <<: *install_target_unix
+        # <<: *build_unix
+        # archive_script: zip "$BIN-$TARGET" "$BIN-$TARGET"
+        # - env:
+        #   TARGET: x86_64-unknown-freebsd
+        #   STRIP: strip
+        #   EXT: tar.gz
+        # freebsd_instance:
+        #   image_family: freebsd-11-4
+        # depends_on:
+        #   - check
+        #   - test-stable-x86_64-unknown-freebsd
+        # <<: *base_freebsd
+        # <<: *install_target_unix
+        # <<: *build_unix
+        # archive_script: tar czf "$BIN-$TARGET.$EXT" "$BIN-$TARGET"
+      # checksums_script: ./.ci/build-checksums.sh "$BIN-$TARGET.$EXT"
+      # binaries_artifacts:
+      # path: "$BIN-$TARGET.$EXT*"
+      # <<: *cleanup_before_upload_cache_unix
+    # - env:
+    # TARGET: x86_64-pc-windows-msvc
+    # EXT: zip
+    # windows_container:
+    # image: fnichol/windowsservercore:ltsc2019-vs2019-vctools
+    # depends_on:
+    # - check
+    # - test-stable-x86_64-pc-windows-msvc
+    # <<: *base_windows
+    # <<: *install_target_windows
+    # <<: *build_windows
+    # archive_script: |
+    # Compress-Archive "$env:BIN-$env:TARGET.exe" "$env:BIN-$env:TARGET.$env:EXT"
+    # checksums_script:
+    # .\.ci\build-checksums.ps1 "$env:BIN-$env:TARGET.$env:EXT"
+    # binaries_artifacts:
+    # path: "$BIN-$TARGET.$EXT*"
+    # <<: *cleanup_before_upload_cache_windows
 
-# release_artifacts_task:
-#   name: release-artifacts-${BIN}
-#   alias: release-artifacts
-#   only_if: $CIRRUS_TAG != ''
-#   depends_on:
-#     - build-bins
-#   env:
-#     BIN: fnichol-cime
-#     GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
-#   install_dependencies_script: apk add curl jo jq
-#   create_github_release_script: |
-#     if ! upload_url="$(
-#       ./.ci/cirrus-release.sh gh_create_version_release \
-#         "$CIRRUS_REPO_FULL_NAME" \
-#         "$CIRRUS_TAG"
-#     )"; then
-#       echo "xxx Failed to create release" >&2
-#       exit 1
-#     fi
-#     echo "$upload_url" > /tmp/upload_url
-#   download_cirrus_artifacts_script: |
-#     cr="$(readlink -f ./.ci/cirrus-release.sh)"
-#     manifest="$(readlink -f ".ci/$BIN.manifest.txt")"
-#     mkdir -p /tmp/release
-#     cd /tmp/release
-#     awk '{ print $2 }' "$manifest" | while read -r a; do
-#       "$cr" ci_download "build-bin-$a/binaries/$a"
-#       "$cr" ci_download "build-bin-$a/binaries/$a.md5"
-#       "$cr" ci_download "build-bin-$a/binaries/$a.sha256"
-#     done
-#     cp "$manifest" .
-#     ls -l "$BIN"*
-#   upload_release_artifacts_script: |
-#     url="$(cat /tmp/upload_url)"
-#     ./.ci/cirrus-release.sh gh_upload_all "$url" /tmp/release
+ci_success_task:
+  name: ci-success
+  depends_on:
+    - check
+    - tests
+    - build-bins
+  container:
+    image: alpine:latest
+  clone_script: mkdir -p "$CIRRUS_WORKING_DIR"
+  success_script: /bin/true
 
-# build_docker_image_docker_builder:
-#   name: build-docker-image-${BIN}
-#   alias: build-docker-images
-#   only_if: $CIRRUS_TAG != ''
-#   depends_on:
-#     - release-artifacts-fnichol-cime
-#   env:
-#     AUTHOR: Fletcher Nichol <fnichol@nichol.ca>
-#     LICENSE: MPL-2.0
-#     BIN: fnichol-cime
-#     REPO: fnichol/${BIN}
-#     IMG: ${REPO}
-#     DOCKER_USERNAME: ENCRYPTED[3e38482137ca39fa18416c90a31e9567c6cde8506b30ddba7d083a3799a3d7e55a919976a74b50f47274e0b69233c507]
-#     DOCKER_PASSWORD: ENCRYPTED[5df55aa8c424d33286f8bfecdb710231fa00809ce41dc517bead679f863ec84c6a8147b93ea9e8888513f01d8f8351a7]
-#   build_script: |
-#     ./.ci/build-docker-image.sh \
-#       "$IMG" "$REPO" "$AUTHOR" "$LICENSE" "$BIN" "${CIRRUS_TAG#v}"
-#   login_script: |
-#     echo "$DOCKER_PASSWORD" \
-#       | docker login --username "$DOCKER_USERNAME" --password-stdin
-#   push_script:
-#     - docker push "$IMG:${CIRRUS_TAG#v}"
-#     - docker push "$IMG:latest"
+release_artifacts_task:
+  name: release-artifacts-${BIN}
+  alias: release-artifacts
+  only_if: $CIRRUS_TAG != ''
+  depends_on:
+    - build-bins
+  env:
+    BIN: fnichol-cime
+    GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
+  install_dependencies_script: apk add curl jo jq
+  create_github_release_script: |
+    if ! upload_url="$(
+      ./.ci/cirrus-release.sh gh_create_version_release \
+        "$CIRRUS_REPO_FULL_NAME" \
+        "$CIRRUS_TAG"
+    )"; then
+      echo "xxx Failed to create release" >&2
+      exit 1
+    fi
+    echo "$upload_url" > /tmp/upload_url
+  download_cirrus_artifacts_script: |
+    cr="$(readlink -f ./.ci/cirrus-release.sh)"
+    manifest="$(readlink -f ".ci/$BIN.manifest.txt")"
+    mkdir -p /tmp/release
+    cd /tmp/release
+    awk '{ print $2 }' "$manifest" | while read -r a; do
+      "$cr" ci_download "build-bin-$a/binaries/$a"
+      "$cr" ci_download "build-bin-$a/binaries/$a.md5"
+      "$cr" ci_download "build-bin-$a/binaries/$a.sha256"
+    done
+    cp "$manifest" .
+    ls -l "$BIN"*
+  upload_release_artifacts_script: |
+    url="$(cat /tmp/upload_url)"
+    ./.ci/cirrus-release.sh gh_upload_all "$url" /tmp/release
 
-# publish_create_task:
-#   name: publish-crate-${CRATE}
-#   alias: publish-crates
-#   only_if: $CIRRUS_TAG =~ 'v.*'
-#   depends_on:
-#     - release-artifacts-fnichol-cime
-#   env:
-#     CRATE: fnichol-cime
-#     CRATES_IO_TOKEN: ENCRYPTED[0c6ba7d0bd264cf02d59451d0135eb215d2774a9eb86e89dd9bfb3cab6a1c4aaa48a69edfb3d0ae6f4850441e6e591bb]
-#   container:
-#     image: rust:latest
-#   <<: *base_linux
-#   login_script: echo "$CRATES_IO_TOKEN" | cargo login
-#   publish_script: cargo publish
+build_docker_image_docker_builder:
+  name: build-docker-image-${BIN}
+  alias: build-docker-images
+  only_if: $CIRRUS_TAG != ''
+  depends_on:
+    - release-artifacts-fnichol-cime
+  env:
+    AUTHOR: Fletcher Nichol <fnichol@nichol.ca>
+    LICENSE: MPL-2.0
+    BIN: fnichol-cime
+    REPO: fnichol/${BIN}
+    IMG: ${REPO}
+    DOCKER_USERNAME: ENCRYPTED[3e38482137ca39fa18416c90a31e9567c6cde8506b30ddba7d083a3799a3d7e55a919976a74b50f47274e0b69233c507]
+    DOCKER_PASSWORD: ENCRYPTED[5df55aa8c424d33286f8bfecdb710231fa00809ce41dc517bead679f863ec84c6a8147b93ea9e8888513f01d8f8351a7]
+  build_script: |
+    ./.ci/build-docker-image.sh \
+      "$IMG" "$REPO" "$AUTHOR" "$LICENSE" "$BIN" "${CIRRUS_TAG#v}"
+  login_script: |
+    echo "$DOCKER_PASSWORD" \
+      | docker login --username "$DOCKER_USERNAME" --password-stdin
+  push_script:
+    - docker push "$IMG:${CIRRUS_TAG#v}"
+    - docker push "$IMG:latest"
 
-# release_success_task:
-#   name: release-success
-#   only_if: $CIRRUS_TAG != ''
-#   depends_on:
-#     - release-artifacts
-#     - build-docker-images
-#     - publish-crates
-#   container:
-#     image: alpine:latest
-#   clone_script: mkdir -p "$CIRRUS_WORKING_DIR"
-#   success_script: /bin/true
+publish_create_task:
+  name: publish-crate-${CRATE}
+  alias: publish-crates
+  only_if: $CIRRUS_TAG =~ 'v.*'
+  depends_on:
+    - release-artifacts-fnichol-cime
+  env:
+    CRATE: fnichol-cime
+    CRATES_IO_TOKEN: ENCRYPTED[0c6ba7d0bd264cf02d59451d0135eb215d2774a9eb86e89dd9bfb3cab6a1c4aaa48a69edfb3d0ae6f4850441e6e591bb]
+  container:
+    image: rust:latest
+  <<: *base_linux
+  login_script: echo "$CRATES_IO_TOKEN" | cargo login
+  publish_script: cargo publish
+
+release_success_task:
+  name: release-success
+  only_if: $CIRRUS_TAG != ''
+  depends_on:
+    - release-artifacts
+    - build-docker-images
+    - publish-crates
+  container:
+    image: alpine:latest
+  clone_script: mkdir -p "$CIRRUS_WORKING_DIR"
+  success_script: /bin/true
