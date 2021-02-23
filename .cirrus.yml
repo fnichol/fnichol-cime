@@ -127,7 +127,8 @@ env:
 
 check_task:
   name: check
-  only_if: $CIRRUS_BRANCH !=~ ".*\.tmp"
+  only_if:
+    $CIRRUS_BRANCH !=~ ".*\.tmp" && $CIRRUS_BRANCH != $CIRRUS_DEFAULT_BRANCH
   container:
     image: rust:latest
   <<: *base_linux
@@ -137,7 +138,8 @@ check_task:
 test_task:
   name: test-${RUST_VERSION}-${TARGET}
   alias: tests
-  only_if: $CIRRUS_BRANCH !=~ ".*\.tmp"
+  only_if:
+    $CIRRUS_BRANCH !=~ ".*\.tmp" && $CIRRUS_BRANCH != $CIRRUS_DEFAULT_BRANCH
   env:
     matrix:
       - RUST_VERSION: stable
