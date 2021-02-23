@@ -128,8 +128,8 @@ env:
 check_task:
   name: check
   only_if:
-    $CIRRUS_BRANCH !=~ ".*\.tmp" && $CIRRUS_CHANGE_MESSAGE !=~ '.*[skip ci].*'
-    && $CIRRUS_BRANCH != $CIRRUS_DEFAULT_BRANCH
+    $CIRRUS_BRANCH !=~ ".*\.tmp" && $CIRRUS_BRANCH != $CIRRUS_DEFAULT_BRANCH
+  skip: $CIRRUS_BRANCH == 'staging' && $CIRRUS_CHANGE_MESSAGE =~ '.*[skip ci].*'
   container:
     image: rust:latest
   <<: *base_linux
@@ -140,8 +140,8 @@ test_task:
   name: test-${RUST_VERSION}-${TARGET}
   alias: tests
   only_if:
-    $CIRRUS_BRANCH !=~ ".*\.tmp" && $CIRRUS_CHANGE_MESSAGE !=~ '.*[skip ci].*'
-    && $CIRRUS_BRANCH != $CIRRUS_DEFAULT_BRANCH
+    $CIRRUS_BRANCH !=~ ".*\.tmp" && $CIRRUS_BRANCH != $CIRRUS_DEFAULT_BRANCH
+  skip: $CIRRUS_BRANCH == 'staging' && $CIRRUS_CHANGE_MESSAGE =~ '.*[skip ci].*'
   env:
     matrix:
       - RUST_VERSION: stable
@@ -185,7 +185,7 @@ build_bin_task:
   only_if:
     $CIRRUS_TAG != '' || $CIRRUS_BRANCH == 'staging' || $CIRRUS_BRANCH ==
     'trying'
-  skip: $CIRRUS_CHANGE_MESSAGE =~ '.*[skip ci].*'
+  skip: $CIRRUS_BRANCH == 'staging' && $CIRRUS_CHANGE_MESSAGE =~ '.*[skip ci].*'
   env:
     BIN: fnichol-cime
     RUST_BACKTRACE: 1
