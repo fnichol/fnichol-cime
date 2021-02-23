@@ -97,37 +97,37 @@ with the Rust distributions) before running:
 
 ### Build (main branch)
 
-| Operating System | Target                        | Stable Rust                                                                  |
-| ---------------: | ----------------------------- | ---------------------------------------------------------------------------- |
-|          FreeBSD | `x86_64-unknown-freebsd`      | [![FreeBSD Build Status][badge-ci-build-x86_64-unknown-freebsd]][ci-main]    |
-|            Linux | `arm-unknown-linux-gnueabihf` | [![Linux Build Status][badge-ci-build-arm-unknown-linux-gnueabihf]][ci-main] |
-|            Linux | `aarch64-unknown-linux-gnu`   | [![Linux Build Status][badge-ci-build-aarch64-unknown-linux-gnu]][ci-main]   |
-|            Linux | `i686-unknown-linux-gnu`      | [![Linux Build Status][badge-ci-build-i686-unknown-linux-gnu]][ci-main]      |
-|            Linux | `i686-unknown-linux-musl`     | [![Linux Build Status][badge-ci-build-i686-unknown-linux-musl]][ci-main]     |
-|            Linux | `x86_64-unknown-linux-gnu`    | [![Linux Build Status][badge-ci-build-x86_64-unknown-linux-gnu]][ci-main]    |
-|            Linux | `x86_64-unknown-linux-musl`   | [![Linux Build Status][badge-ci-build-x86_64-unknown-linux-musl]][ci-main]   |
-|            macOS | `x86_64-apple-darwin`         | [![macOS Build Status][badge-ci-build-x86_64-apple-darwin]][ci-main]         |
-|          Windows | `x86_64-pc-windows-msvc`      | [![Windows Build Status][badge-ci-build-x86_64-pc-windows-msvc]][ci-main]    |
+| Operating System | Target                        | Stable Rust                                                                     |
+| ---------------: | ----------------------------- | ------------------------------------------------------------------------------- |
+|          FreeBSD | `x86_64-unknown-freebsd`      | [![FreeBSD Build Status][badge-ci-build-x86_64-unknown-freebsd]][ci-staging]    |
+|            Linux | `arm-unknown-linux-gnueabihf` | [![Linux Build Status][badge-ci-build-arm-unknown-linux-gnueabihf]][ci-staging] |
+|            Linux | `aarch64-unknown-linux-gnu`   | [![Linux Build Status][badge-ci-build-aarch64-unknown-linux-gnu]][ci-staging]   |
+|            Linux | `i686-unknown-linux-gnu`      | [![Linux Build Status][badge-ci-build-i686-unknown-linux-gnu]][ci-staging]      |
+|            Linux | `i686-unknown-linux-musl`     | [![Linux Build Status][badge-ci-build-i686-unknown-linux-musl]][ci-staging]     |
+|            Linux | `x86_64-unknown-linux-gnu`    | [![Linux Build Status][badge-ci-build-x86_64-unknown-linux-gnu]][ci-staging]    |
+|            Linux | `x86_64-unknown-linux-musl`   | [![Linux Build Status][badge-ci-build-x86_64-unknown-linux-musl]][ci-staging]   |
+|            macOS | `x86_64-apple-darwin`         | [![macOS Build Status][badge-ci-build-x86_64-apple-darwin]][ci-staging]         |
+|          Windows | `x86_64-pc-windows-msvc`      | [![Windows Build Status][badge-ci-build-x86_64-pc-windows-msvc]][ci-staging]    |
 
 ### Test (main branch)
 
-| Operating System | Stable Rust                                                            | Nightly Rust                                                             |
-| ---------------: | ---------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-|          FreeBSD | [![FreeBSD Stable Test Status][badge-ci-test-stable-freebsd]][ci-main] | [![FreeBSD Nightly Test Status][badge-ci-test-nightly-freebsd]][ci-main] |
-|            Linux | [![Linux Stable Test Status][badge-ci-test-stable-linux]][ci-main]     | [![Linux Nightly Test Status][badge-ci-test-nightly-linux]][ci-main]     |
-|            macOS | [![macOS Stable Test Status][badge-ci-test-stable-macos]][ci-main]     | [![macOS Nightly Test Status][badge-ci-test-nightly-macos]][ci-main]     |
-|          Windows | [![Windows Stable Test Status][badge-ci-test-stable-windows]][ci-main] | [![Windows Nightly Test Status][badge-ci-test-nightly-windows]][ci-main] |
+| Operating System | Stable Rust                                                               | Nightly Rust                                                                |
+| ---------------: | ------------------------------------------------------------------------- | --------------------------------------------------------------------------- |
+|          FreeBSD | [![FreeBSD Stable Test Status][badge-ci-test-stable-freebsd]][ci-staging] | [![FreeBSD Nightly Test Status][badge-ci-test-nightly-freebsd]][ci-staging] |
+|            Linux | [![Linux Stable Test Status][badge-ci-test-stable-linux]][ci-staging]     | [![Linux Nightly Test Status][badge-ci-test-nightly-linux]][ci-staging]     |
+|            macOS | [![macOS Stable Test Status][badge-ci-test-stable-macos]][ci-staging]     | [![macOS Nightly Test Status][badge-ci-test-nightly-macos]][ci-staging]     |
+|          Windows | [![Windows Stable Test Status][badge-ci-test-stable-windows]][ci-staging] | [![Windows Nightly Test Status][badge-ci-test-nightly-windows]][ci-staging] |
 
 **Note**: The
 [Minimum Supported Rust Version (MSRV)](https://github.com/rust-lang/rfcs/pull/2495)
-is also tested and can be viewed in the [CI dashboard][ci-main].
+is also tested and can be viewed in the [CI dashboard][ci-staging].
 
 ### Check (main branch)
 
-|        | Status                                             |
-| ------ | -------------------------------------------------- |
-| Lint   | [![Lint Status][badge-ci-check-lint]][ci-main]     |
-| Format | [![Format Status][badge-ci-check-format]][ci-main] |
+|        | Status                                                |
+| ------ | ----------------------------------------------------- |
+| Lint   | [![Lint Status][badge-ci-check-lint]][ci-staging]     |
+| Format | [![Format Status][badge-ci-check-format]][ci-staging] |
 
 ## Code of Conduct
 
@@ -221,7 +221,7 @@ licensed as above, without any additional terms or conditions.
 [changelog]:
   https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/CHANGELOG.md
 [ci]: https://cirrus-ci.com/github/fnichol/fnichol-cime
-[ci-main]: https://cirrus-ci.com/github/fnichol/fnichol-cime/main
+[ci-staging]: https://cirrus-ci.com/github/fnichol/fnichol-cime/staging
 [code-of-conduct]:
   https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/CODE_OF_CONDUCT.md
 [crate]: https://crates.io/crates/fnichol-cime
