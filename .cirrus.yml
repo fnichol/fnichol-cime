@@ -125,15 +125,22 @@ env:
   RUST_VERSION: stable
   MIN_SUPPORTED_RUST_VERSION: 1.40.0 # Due to clap 3 beta.2 (mem::take)
 
+diagnose_task:
+  name: diagnose
+  container:
+    image: rust:latest
+  diagnose_script: printenv
+
 check_task:
   name: check
   only_if:
     $CIRRUS_BRANCH !=~ ".*\.tmp" && $CIRRUS_BRANCH != $CIRRUS_DEFAULT_BRANCH
   container:
     image: rust:latest
-  <<: *base_linux
-  lint_script: cargo make check-lint
-  format_script: cargo make check-format
+  noop_script: printenv
+  # <<: *base_linux
+  # lint_script: cargo make check-lint
+  # format_script: cargo make check-format
 
 test_task:
   name: test-${RUST_VERSION}-${TARGET}
@@ -143,39 +150,40 @@ test_task:
   env:
     matrix:
       - RUST_VERSION: stable
-      - RUST_VERSION: nightly
-      - RUST_VERSION: $MIN_SUPPORTED_RUST_VERSION
-  allow_failures: $RUST_VERSION == 'nightly'
+      # - RUST_VERSION: nightly
+      # - RUST_VERSION: $MIN_SUPPORTED_RUST_VERSION
+  # allow_failures: $RUST_VERSION == 'nightly'
   matrix:
     - matrix:
         - env:
             TARGET: x86_64-unknown-linux-gnu
           container:
             image: rust:latest
-          <<: *base_linux
-        - env:
-            TARGET: x86_64-apple-darwin
-          osx_instance:
-            image: catalina-base
-          <<: *base_macos
-        - env:
-            TARGET: x86_64-unknown-freebsd
-          freebsd_instance:
-            image_family: freebsd-11-4
-          <<: *base_freebsd
-      <<: *install_target_unix
-      test_bin_script: cargo make test-bin -- "--target=$TARGET"
-      test_lib_script: cargo make test-lib -- "--target=$TARGET"
-      <<: *cleanup_before_upload_cache_unix
-    - env:
-        TARGET: x86_64-pc-windows-msvc
-      windows_container:
-        image: fnichol/windowsservercore:ltsc2019-vs2019-vctools
-      <<: *base_windows
-      <<: *install_target_windows
-      test_bin_script: cargo make test-bin -- "--target=$env:TARGET"
-      test_lib_script: cargo make test-lib -- "--target=$env:TARGET"
-      <<: *cleanup_before_upload_cache_windows
+          # <<: *base_linux
+        # - env:
+        #   TARGET: x86_64-apple-darwin
+        # osx_instance:
+        #   image: catalina-base
+        # <<: *base_macos
+        # - env:
+        #   TARGET: x86_64-unknown-freebsd
+        # freebsd_instance:
+        #   image_family: freebsd-11-4
+        # <<: *base_freebsd
+      noop_script: printenv
+      # <<: *install_target_unix
+      # test_bin_script: cargo make test-bin -- "--target=$TARGET"
+      # test_lib_script: cargo make test-lib -- "--target=$TARGET"
+      # <<: *cleanup_before_upload_cache_unix
+    # - env:
+    #     TARGET: x86_64-pc-windows-msvc
+    #   windows_container:
+    #     image: fnichol/windowsservercore:ltsc2019-vs2019-vctools
+    #   <<: *base_windows
+    #   <<: *install_target_windows
+    #   test_bin_script: cargo make test-bin -- "--target=$env:TARGET"
+    #   test_lib_script: cargo make test-lib -- "--target=$env:TARGET"
+    #   <<: *cleanup_before_upload_cache_windows
 
 build_bin_task:
   name: build-bin-${BIN}-${TARGET}.${EXT}
@@ -190,76 +198,77 @@ build_bin_task:
     - matrix:
         - env:
             matrix:
-              - TARGET: arm-unknown-linux-gnueabihf
-                STRIP: arm-linux-gnueabihf-strip
-              - TARGET: aarch64-unknown-linux-gnu
-                STRIP: aarch64-linux-gnu-strip
-              - TARGET: i686-unknown-linux-gnu
-                STRIP: x86_64-linux-gnu-strip
-              - TARGET: i686-unknown-linux-musl
-                STRIP: i686-linux-musl-strip
+              # - TARGET: arm-unknown-linux-gnueabihf
+              #   STRIP: arm-linux-gnueabihf-strip
+              # - TARGET: aarch64-unknown-linux-gnu
+              #   STRIP: aarch64-linux-gnu-strip
+              # - TARGET: i686-unknown-linux-gnu
+              #   STRIP: x86_64-linux-gnu-strip
+              # - TARGET: i686-unknown-linux-musl
+              #   STRIP: i686-linux-musl-strip
               - TARGET: x86_64-unknown-linux-gnu
                 STRIP: strip
-              - TARGET: x86_64-unknown-linux-musl
-                STRIP: x86_64-linux-musl-strip
+              # - TARGET: x86_64-unknown-linux-musl
+              #   STRIP: x86_64-linux-musl-strip
             EXT: tar.gz
           container:
             image: rustembedded/cross:$TARGET
           depends_on:
             - check
             - test-stable-x86_64-unknown-linux-gnu
-          <<: *base_linux
-          <<: *install_target_unix
-          <<: *build_unix
-          archive_script: tar czf "$BIN-$TARGET.$EXT" "$BIN-$TARGET"
-        - env:
-            TARGET: x86_64-apple-darwin
-            STRIP: strip
-            EXT: zip
-          osx_instance:
-            image: catalina-base
-          depends_on:
-            - check
-            - test-stable-x86_64-apple-darwin
-          <<: *base_macos
-          <<: *install_target_unix
-          <<: *build_unix
-          archive_script: zip "$BIN-$TARGET" "$BIN-$TARGET"
-        - env:
-            TARGET: x86_64-unknown-freebsd
-            STRIP: strip
-            EXT: tar.gz
-          freebsd_instance:
-            image_family: freebsd-11-4
-          depends_on:
-            - check
-            - test-stable-x86_64-unknown-freebsd
-          <<: *base_freebsd
-          <<: *install_target_unix
-          <<: *build_unix
-          archive_script: tar czf "$BIN-$TARGET.$EXT" "$BIN-$TARGET"
-      checksums_script: ./.ci/build-checksums.sh "$BIN-$TARGET.$EXT"
-      binaries_artifacts:
-        path: "$BIN-$TARGET.$EXT*"
-      <<: *cleanup_before_upload_cache_unix
-    - env:
-        TARGET: x86_64-pc-windows-msvc
-        EXT: zip
-      windows_container:
-        image: fnichol/windowsservercore:ltsc2019-vs2019-vctools
-      depends_on:
-        - check
-        - test-stable-x86_64-pc-windows-msvc
-      <<: *base_windows
-      <<: *install_target_windows
-      <<: *build_windows
-      archive_script: |
-        Compress-Archive "$env:BIN-$env:TARGET.exe" "$env:BIN-$env:TARGET.$env:EXT"
-      checksums_script:
-        .\.ci\build-checksums.ps1 "$env:BIN-$env:TARGET.$env:EXT"
-      binaries_artifacts:
-        path: "$BIN-$TARGET.$EXT*"
-      <<: *cleanup_before_upload_cache_windows
+          noop_script: printenv
+          # <<: *base_linux
+          # <<: *install_target_unix
+          # <<: *build_unix
+          # archive_script: tar czf "$BIN-$TARGET.$EXT" "$BIN-$TARGET"
+        # - env:
+        #   TARGET: x86_64-apple-darwin
+        #   STRIP: strip
+        #   EXT: zip
+        # osx_instance:
+        #   image: catalina-base
+        # depends_on:
+        #   - check
+        #   - test-stable-x86_64-apple-darwin
+        # <<: *base_macos
+        # <<: *install_target_unix
+        # <<: *build_unix
+        # archive_script: zip "$BIN-$TARGET" "$BIN-$TARGET"
+        # - env:
+        #   TARGET: x86_64-unknown-freebsd
+        #   STRIP: strip
+        #   EXT: tar.gz
+        # freebsd_instance:
+        #   image_family: freebsd-11-4
+        # depends_on:
+        #   - check
+        #   - test-stable-x86_64-unknown-freebsd
+        # <<: *base_freebsd
+        # <<: *install_target_unix
+        # <<: *build_unix
+        # archive_script: tar czf "$BIN-$TARGET.$EXT" "$BIN-$TARGET"
+      # checksums_script: ./.ci/build-checksums.sh "$BIN-$TARGET.$EXT"
+      # binaries_artifacts:
+      # path: "$BIN-$TARGET.$EXT*"
+      # <<: *cleanup_before_upload_cache_unix
+    # - env:
+    # TARGET: x86_64-pc-windows-msvc
+    # EXT: zip
+    # windows_container:
+    # image: fnichol/windowsservercore:ltsc2019-vs2019-vctools
+    # depends_on:
+    # - check
+    # - test-stable-x86_64-pc-windows-msvc
+    # <<: *base_windows
+    # <<: *install_target_windows
+    # <<: *build_windows
+    # archive_script: |
+    # Compress-Archive "$env:BIN-$env:TARGET.exe" "$env:BIN-$env:TARGET.$env:EXT"
+    # checksums_script:
+    # .\.ci\build-checksums.ps1 "$env:BIN-$env:TARGET.$env:EXT"
+    # binaries_artifacts:
+    # path: "$BIN-$TARGET.$EXT*"
+    # <<: *cleanup_before_upload_cache_windows
 
 ci_success_task:
   name: ci-success
