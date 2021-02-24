@@ -128,8 +128,7 @@ build_docker_image() {
 
   local workdir
   workdir="$(mktemp -d 2>/dev/null || mktemp -d -t tmp)"
-  # shellcheck shell=sh disable=SC2064
-  trap "cleanup $workdir" 1 2 3 15 ERR
+  setup_traps "cleanup $workdir"
 
   echo "  - Downloading $github_url to $archive"
   curl -sSfL "$github_url" -o "$workdir/$archive"
@@ -177,6 +176,27 @@ build_docker_image() {
   echo "  - Building image $img:$version"
   docker build -t "$img:$version" .
   docker tag "$img:$version" "$img:latest"
+}
+
+# See: https://git.io/JtdlJ
+setup_traps() {
+  local trap_fun
+  trap_fun="$1"
+
+  local sig
+  for sig in HUP INT QUIT ALRM TERM; do
+    trap "
+      $trap_fun
+      trap - $sig EXIT
+      kill -s $sig "'"$$"' "$sig"
+  done
+
+  if [ -n "${ZSH_VERSION:-}" ]; then
+    eval "zshexit() { eval '$trap_fun'; }"
+  else
+    # shellcheck disable=SC2064
+    trap "$trap_fun" EXIT
+  fi
 }
 
 cleanup() {
