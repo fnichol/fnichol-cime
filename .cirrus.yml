@@ -272,9 +272,8 @@ ci_success_task:
   clone_script: mkdir -p "$CIRRUS_WORKING_DIR"
   success_script: /bin/true
 
-release_artifacts_task:
-  name: release-artifacts-${BIN}
-  alias: release-artifacts
+create_github_release_task:
+  name: create-github-release
   only_if: $CIRRUS_TAG != ''
   depends_on:
     - build-bins
@@ -306,7 +305,7 @@ release_artifacts_task:
     done
     cp "$manifest" .
     ls -l "$BIN"*
-  upload_release_artifacts_script: |
+  upload_github_release_artifacts_script: |
     url="$(cat /tmp/upload_url)"
     ./.ci/cirrus-release.sh gh_upload_all "$url" /tmp/release
 
@@ -314,32 +313,41 @@ build_docker_image_docker_builder:
   name: build-docker-image-${BIN}
   alias: build-docker-images
   only_if: $CIRRUS_TAG != ''
-  depends_on:
-    - release-artifacts-fnichol-cime
   env:
     AUTHOR: Fletcher Nichol <fnichol@nichol.ca>
     LICENSE: MPL-2.0
     BIN: fnichol-cime
-    REPO: fnichol/${BIN}
-    IMG: ${REPO}
+    REPO: fnichol/$BIN
+    IMG: $REPO
+    TARGET: x86_64-unknown-linux-musl
+    EXT: tar.gz
+    ARCHIVE: $BIN-$TARGET.$EXT
     DOCKER_USERNAME: ENCRYPTED[3e38482137ca39fa18416c90a31e9567c6cde8506b30ddba7d083a3799a3d7e55a919976a74b50f47274e0b69233c507]
     DOCKER_PASSWORD: ENCRYPTED[5df55aa8c424d33286f8bfecdb710231fa00809ce41dc517bead679f863ec84c6a8147b93ea9e8888513f01d8f8351a7]
+  download_cirrus_artifacts_script: |
+    cr="$(readlink -f ./.ci/cirrus-release.sh)"
+    mkdir -p /tmp/artifacts
+    cd /tmp/artifacts
+    "$cr" ci_download "build-bin-$ARCHIVE/binaries/$ARCHIVE"
+    "$cr" ci_download "build-bin-$ARCHIVE/binaries/$ARCHIVE.sha256"
   build_script: |
     ./.ci/build-docker-image.sh \
-      "$IMG" "$REPO" "$AUTHOR" "$LICENSE" "$BIN" "${CIRRUS_TAG#v}"
+      "$IMG" "${CIRRUS_TAG#v}" "$REPO" "$AUTHOR" "$LICENSE" "$BIN" \
+      "/tmp/artifacts/$ARCHIVE"
   login_script: |
     echo "$DOCKER_PASSWORD" \
       | docker login --username "$DOCKER_USERNAME" --password-stdin
-  push_script:
-    - docker push "$IMG:${CIRRUS_TAG#v}"
-    - docker push "$IMG:latest"
+  push_script: |
+    docker push "$IMG:${CIRRUS_TAG#v}"
+    docker push "$IMG:latest"
 
-publish_create_task:
+publish_crate_task:
   name: publish-crate-${CRATE}
   alias: publish-crates
   only_if: $CIRRUS_TAG =~ 'v.*'
   depends_on:
-    - release-artifacts-fnichol-cime
+    - create-github-release
+    - build-docker-images
   env:
     CRATE: fnichol-cime
     CRATES_IO_TOKEN: ENCRYPTED[0c6ba7d0bd264cf02d59451d0135eb215d2774a9eb86e89dd9bfb3cab6a1c4aaa48a69edfb3d0ae6f4850441e6e591bb]
@@ -349,13 +357,30 @@ publish_create_task:
   login_script: echo "$CRATES_IO_TOKEN" | cargo login
   publish_script: cargo publish
 
+publish_github_release_task:
+  name: publish-github-release
+  only_if: $CIRRUS_TAG != ''
+  depends_on:
+    - create-github-release
+    - build-docker-images
+    - publish-crates
+  container:
+    image: alpine:3
+  env:
+    GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
+  install_dependencies_script: apk add curl jo jq
+  publish_release_script: |
+    ./.ci/cirrus-release.sh gh_publish_release \
+      "$CIRRUS_REPO_FULL_NAME" "$CIRRUS_TAG" CHANGELOG.md
+
 release_success_task:
   name: release-success
   only_if: $CIRRUS_TAG != ''
   depends_on:
-    - release-artifacts
+    - create-github-release
     - build-docker-images
     - publish-crates
+    - publish-github-release
   container:
     image: alpine:3
   clone_script: mkdir -p "$CIRRUS_WORKING_DIR"
