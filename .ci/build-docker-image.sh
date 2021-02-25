@@ -9,18 +9,19 @@ print_usage() {
     Builds a Docker image
 
     USAGE:
-        $program [FLAGS] [--] <IMG> <REPO> <AUTHOR> <LICENSE> <BIN> <VERSION>
+        $program [FLAGS] [--] <IMG> <VERSION> <REPO> <AUTHOR> <LICENSE> <BIN> <ARCHIVE>
 
     FLAGS:
         -h, --help          Prints help information
 
     ARGS:
-        <IMG>     Name of Docker Hub image [example: jdoe/myproject]
-        <REPO>    Name of GitHub repository [example: jdoe/myproject-rs]
+        <ARCHIVE> Tarball archive [example: names-x86_64-linux-musl.tar.gz]
         <AUTHOR>  Author names [example: Jane Doe <jdoe@example.com]
+        <BIN>     Name of the program [example: names]
+        <IMG>     Name of Docker Hub image [example: jdoe/names]
         <LICENSE> License for project [example: MPL-2.0]
-        <BIN>     Name of program
-        <VERSION> Version to install and tag
+        <REPO>    Name of GitHub repository [example: jdoe/names-rs]
+        <VERSION> Version to install and tag [example: 1.0.1]
     " | sed 's/^ \{1,4\}//g'
 }
 
@@ -29,7 +30,7 @@ main() {
   if [ -n "${DEBUG:-}" ]; then set -v; fi
   if [ -n "${TRACE:-}" ]; then set -xv; fi
 
-  local program img repo author license bin version
+  local program img version repo author license bin archive
   program="$(basename "$0")"
 
   OPTIND=1
@@ -71,6 +72,12 @@ main() {
   shift
   if [ -z "${1:-}" ]; then
     print_usage "$program" >&2
+    die "missing <VERSION> argument"
+  fi
+  version="$1"
+  shift
+  if [ -z "${1:-}" ]; then
+    print_usage "$program" >&2
     die "missing <REPO> argument"
   fi
   repo="$1"
@@ -95,58 +102,63 @@ main() {
   shift
   if [ -z "${1:-}" ]; then
     print_usage "$program" >&2
-    die "missing <VERSION> argument"
+    die "missing <ARCHIVE> argument"
   fi
-  version="$1"
+  archive="$1"
   shift
 
-  build_docker_image "$img" "$repo" "$author" "$license" "$bin" "$version"
+  if [ ! -f "$archive" ]; then
+    print_usage "$program" >&2
+    die "archive file does not exist: '$archive'"
+  fi
+  if [ ! -f "$archive.sha256" ]; then
+    print_usage "$program" >&2
+    die "archive checksum file does not exist: '$archive.sha256'"
+  fi
+
+  build_docker_image \
+    "$img" "$version" "$repo" "$author" "$license" "$bin" "$archive"
 }
 
 build_docker_image() {
   local img="$1"
-  local repo="$2"
-  local author="$3"
-  local license="$4"
-  local bin="$5"
-  local version="$6"
+  local version="$2"
+  local repo="$3"
+  local author="$4"
+  local license="$5"
+  local bin="$6"
+  local archive="$7"
 
-  need_cmd curl
+  need_cmd basename
   need_cmd date
+  need_cmd dirname
   need_cmd docker
   need_cmd git
   need_cmd shasum
   need_cmd tar
 
+  local full_name
+  full_name="$(basename "$archive")"
+  full_name="${full_name%%.tar.gz}"
+
   echo "--- Building a Docker image $img:$version for '$bin'"
-
-  local target="x86_64-unknown-linux-musl"
-
-  local archive="$bin-$target.tar.gz"
-  local github_url="https://github.com/$repo/releases/download"
-  github_url="$github_url/v$version/$archive"
 
   local workdir
   workdir="$(mktemp -d 2>/dev/null || mktemp -d -t tmp)"
   setup_traps "cleanup $workdir"
 
-  echo "  - Downloading $github_url to $archive"
-  curl -sSfL "$github_url" -o "$workdir/$archive"
-  echo "  - Downloading $github_url.sha256 to $archive.sha256"
-  curl -sSfL "$github_url.sha256" -o "$workdir/$archive.sha256"
-
   local revision created
   revision="$(git show -s --format=%H)"
   created="$(date -u +%FT%TZ)"
 
-  cd "$workdir"
+  cd "$(dirname "$archive")"
   echo "  - Verifying $archive"
   shasum -a 256 -c "$archive.sha256"
+
+  cd "$workdir"
   echo "  - Extracting $bin from $archive"
   tar xf "$archive"
-  mv "$bin-$target" "$bin"
-  echo "  - Cleaning up Docker context"
-  rm -f "$archive" "$archive.sha256"
+  mv "$full_name" "$bin"
 
   echo "  - Generating image metadata"
   cat <<-END >image-metadata
