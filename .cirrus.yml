@@ -313,6 +313,9 @@ build_docker_image_docker_builder:
   name: build-docker-image-${BIN}
   alias: build-docker-images
   only_if: $CIRRUS_TAG != ''
+  depends_on:
+    - build-bins
+    - create-github-release
   env:
     AUTHOR: Fletcher Nichol <fnichol@nichol.ca>
     LICENSE: MPL-2.0
