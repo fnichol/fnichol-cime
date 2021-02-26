@@ -4,6 +4,10 @@
 
 ## [Unreleased] - ReleaseDate
 
+## Fixed
+
+- fix GitHub release publish
+
 ## [0.4.0] - 2021-02-25
 
 ## Added
@@ -37,7 +41,6 @@
 <!-- next-url -->
 
 [unreleased]: https://github.com/fnichol/fnichol-cime/compare/v0.4.0...HEAD
-
 [0.4.0]: https://github.com/fnichol/fnichol-cime/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/fnichol/fnichol-cime/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/fnichol/fnichol-cime/compare/v0.1.0...v0.2.0
