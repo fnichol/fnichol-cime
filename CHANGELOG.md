@@ -4,6 +4,18 @@
 
 ## [Unreleased] - ReleaseDate
 
+## Added
+
+- Add project description in README
+
+## Changed
+
+- add bins & GitHub release deps for Docker image build
+
+## Fixed
+
+- fix CI issue when creating GitHub release
+
 ## [0.3.0] - 2021-02-25
 
 ## Changed
@@ -23,7 +35,6 @@
 <!-- next-url -->
 
 [unreleased]: https://github.com/fnichol/fnichol-cime/compare/v0.3.0...HEAD
-
 [0.3.0]: https://github.com/fnichol/fnichol-cime/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/fnichol/fnichol-cime/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/fnichol/fnichol-cime/compare/b51e479...v0.1.0
