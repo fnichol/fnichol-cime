@@ -131,7 +131,7 @@ file:
 
 ```toml
 [dependencies]
-fnichol-cime = { version = "0.3.0", default-features = false }
+fnichol-cime = { version = "0.4.0", default-features = false }
 ```
 
 Note that the default features include dependencies which are required to build
