@@ -71,7 +71,7 @@ ci_download() {
   local dest
   dest="$(basename "$artifact")"
 
-  echo "--- Downlading Cirrus artifact '$artifact' to '$dest'"
+  echo "--- Downlading Cirrus artifact '$artifact' to '$dest'" >&2
 
   curl \
     --fail \
@@ -159,7 +159,7 @@ gh_create_version_release() {
     prerelease=false
   fi
 
-  echo "--- Creating GitHub *draft* release '$tag' for '$repo'"
+  echo "--- Creating GitHub *draft* release '$tag' for '$repo'" >&2
 
   gh_create_release \
     "$repo" \
@@ -195,7 +195,7 @@ gh_publish_release() {
       body="$body"
   )"
 
-  echo "--- Publishing GitHub release '$tag' for '$repo'"
+  echo "--- Publishing GitHub release '$tag' for '$repo'" >&2
 
   local response
   if ! response="$(
@@ -283,7 +283,7 @@ gh_upload() {
   artifact="$(basename "$artifact_file")"
   content_type="application/octet-stream"
 
-  echo "--- Publishing artifact '$artifact' to $url"
+  echo "--- Publishing artifact '$artifact' to $url" >&2
 
   gh_rest_raw POST "$url?name=$artifact" \
     --header "Content-Type: $content_type" \
