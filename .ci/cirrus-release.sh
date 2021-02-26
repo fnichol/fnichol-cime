@@ -81,40 +81,6 @@ ci_download() {
     "${@:---}"
 }
 
-fix_gh_release_body_json() {
-  need_cmd awk
-
-  awk '
-    BEGIN {
-      body_nls = 0
-      body_one_line = 0
-    }
-
-    # If key with body ends with " or ", then it is a one-liner
-    /"body":.*[^\\]"$/ || /"body":.*[^\\]",$/ {
-      body_one_line = 1
-    }
-    # If key with body is not a one-liner, then there are newlines to escape
-    /"body":.*$/ && body_one_line == 0 {
-      body_nls = 1
-    }
-    # If we are escaping newlines and the end of this line ends with " or ",
-    # then escaping is done
-    body_nls == 1 && (/[^\\]"$/ || /[^\\]",$/) {
-      body_nls = 0
-    }
-
-    # Print line as normal if we are not escaping newlines
-    body_nls == 0 {
-      print
-    }
-    # If we are escaping newlines, then do that
-    body_nls == 1 {
-      printf "%s%s", $0, "\\n"
-    }
-  '
-}
-
 gh_create_release() {
   local repo="$1"
   local tag="$2"
@@ -211,15 +177,13 @@ gh_release_id_for_tag() {
   local tag="$2"
 
   need_cmd jq
-  need_cmd sed
 
-  local response
-  if ! response="$(gh_rest GET "/repos/$repo/releases/tags/$tag")"; then
+  if ! gh_rest GET "/repos/$repo/releases" >/tmp/response; then
     echo "!!! Failed to find a release for tag $tag" >&2
     return 1
   fi
 
-  echo "$response" | fix_gh_release_body_json | jq -r .id
+  jq ".[] | select(.tag_name == \"$tag\") | .id" </tmp/response
 }
 
 gh_release_upload_url_for_tag() {
@@ -229,13 +193,12 @@ gh_release_upload_url_for_tag() {
   need_cmd jq
   need_cmd sed
 
-  local response
-  if ! response="$(gh_rest GET "/repos/$repo/releases/tags/$tag")"; then
+  if ! gh_rest GET "/repos/$repo/releases/tags/$tag" >/tmp/response; then
     echo "!!! Failed to find a release for tag $tag" >&2
     return 1
   fi
 
-  echo "$response" | jq -r .upload_url | sed -E 's,\{.+\}$,,'
+  jq -r .upload_url </tmp/response | sed -E 's,\{.+\}$,,'
 }
 
 gh_rest() {
