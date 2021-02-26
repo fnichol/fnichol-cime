@@ -1,5 +1,9 @@
 # {{crate}}
 
+A demonstration of a Rust CI build/test/release workflow supporting
+multi-platform testing, binary builds, Docker image building, and Crates.io
+publishing.
+
 |                  |                                                                                    |
 | ---------------: | ---------------------------------------------------------------------------------- |
 |               CI | [![CI Status][badge-ci-overall]][ci] [![Bors enabled][badge-bors]][bors-dashboard] |
