@@ -118,10 +118,7 @@ gh_create_version_release() {
   local repo="$1"
   local tag="$2"
 
-  if [ "$tag" = "nightly" ]; then
-    gh_delete_release "$repo" "$tag"
-    gh_update_tag "$repo" "$tag"
-  fi
+  gh_delete_release "$repo" "$tag"
 
   local prerelease
   if echo "${tag#v}" | grep -q -E '^\d+\.\d+.\d+$'; then
