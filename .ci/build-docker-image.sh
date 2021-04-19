@@ -190,8 +190,6 @@ build_docker_image() {
   docker build -t "$img:$version" .
   if echo "$version" | grep -q -E '^\d+\.\d+.\d+$'; then
     docker tag "$img:$version" "$img:latest"
-  else
-    docker tag "$img:$version"
   fi
 }
 
