@@ -124,10 +124,10 @@ gh_create_version_release() {
   fi
 
   local prerelease
-  if echo "${tag#v}" | grep -q -E '^\d+\.\d+.\d+-.+'; then
-    prerelease=true
-  else
+  if echo "${tag#v}" | grep -q -E '^\d+\.\d+.\d+$'; then
     prerelease=false
+  else
+    prerelease=true
   fi
 
   echo "--- Creating GitHub *draft* release '$tag' for '$repo'" >&2
@@ -146,7 +146,9 @@ gh_delete_release() {
   local tag="$2"
 
   local release_id
-  if release_id="$(gh_release_id_for_tag "$repo" "$tag" 2>/dev/null)"; then
+  release_id="$(gh_release_id_for_tag "$repo" "$tag" 2>/dev/null)"
+
+  if [ -n "$release_id" ]; then
     echo "--- Deleting GitHub pre-existing release '$tag'" >&2
     if ! gh_rest DELETE "/repos/$repo/releases/$release_id" >/dev/null; then
       echo "!!! Failed to delete a pre-existing release '$tag'" >&2
@@ -264,7 +266,7 @@ gh_update_tag() {
   local sha
   sha="$(git show -s --format=%H)"
 
-  if gh_rest GET "/repos/$repo/git/tags/$tag" >/dev/null 2>&1; then
+  if gh_rest GET "/repos/$repo/git/refs/tags/$tag" >/dev/null 2>&1; then
     echo "--- Updating Git tag reference for '$tag'" >&2
     local payload
     payload="$(
