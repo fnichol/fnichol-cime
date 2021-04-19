@@ -118,6 +118,11 @@ gh_create_version_release() {
   local repo="$1"
   local tag="$2"
 
+  if [ "$tag" = "nightly" ]; then
+    gh_delete_release "$repo" "$tag"
+    gh_update_tag "$repo" "$tag"
+  fi
+
   local prerelease
   if echo "${tag#v}" | grep -q -E '^\d+\.\d+.\d+-.+'; then
     prerelease=true
@@ -136,6 +141,20 @@ gh_create_version_release() {
     "$prerelease"
 }
 
+gh_delete_release() {
+  local repo="$1"
+  local tag="$2"
+
+  local release_id
+  if release_id="$(gh_release_id_for_tag "$repo" "$tag" 2>/dev/null)"; then
+    echo "--- Deleting GitHub pre-existing release '$tag'" >&2
+    if ! gh_rest DELETE "/repos/$repo/releases/$release_id" >/dev/null; then
+      echo "!!! Failed to delete a pre-existing release '$tag'" >&2
+      return 1
+    fi
+  fi
+}
+
 gh_publish_release() {
   local repo="$1"
   local tag="$2"
@@ -147,11 +166,15 @@ gh_publish_release() {
   local release_id
   release_id="$(gh_release_id_for_tag "$repo" "$tag")"
 
-  local changelog_section
-  changelog_section="$(changelog_section "$changelog_file" "$tag")"
-
   local body
-  body="$changelog_section"
+  if [ "$tag" = "nightly" ]; then
+    body=""
+  else
+    local changelog_section
+    changelog_section="$(changelog_section "$changelog_file" "$tag")"
+
+    body="$changelog_section"
+  fi
 
   local payload
   payload="$(
@@ -229,6 +252,43 @@ gh_rest_raw() {
     -X "$method" \
     "$url" \
     "${@:---}"
+}
+
+gh_update_tag() {
+  local repo="$1"
+  local tag="$2"
+
+  need_cmd git
+  need_cmd jo
+
+  local sha
+  sha="$(git show -s --format=%H)"
+
+  if gh_rest GET "/repos/$repo/git/tags/$tag" >/dev/null 2>&1; then
+    echo "--- Updating Git tag reference for '$tag'" >&2
+    local payload
+    payload="$(
+      jo \
+        sha="$sha" \
+        force=true
+    )"
+    if ! gh_rest PATCH "/repos/$repo/git/refs/tags/$tag" --data "$payload" >/dev/null; then
+      echo "!!! Failed to update Git tag reference for '$tag'" >&2
+      return 1
+    fi
+  else
+    echo "--- Creating Git tag reference for '$tag'" >&2
+    local payload
+    payload="$(
+      jo \
+        sha="$sha" \
+        ref="refs/tags/$tag"
+    )"
+    if ! gh_rest POST "/repos/$repo/git/refs" --data "$payload" >/dev/null; then
+      echo "!!! Failed to create Git tag reference for '$tag'" >&2
+      return 1
+    fi
+  fi
 }
 
 gh_upload() {
