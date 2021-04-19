@@ -134,6 +134,7 @@ build_docker_image() {
   need_cmd dirname
   need_cmd docker
   need_cmd git
+  need_cmd grep
   need_cmd shasum
   need_cmd tar
 
@@ -187,7 +188,11 @@ build_docker_image() {
 
   echo "  - Building image $img:$version"
   docker build -t "$img:$version" .
-  docker tag "$img:$version" "$img:latest"
+  if echo "$version" | grep -q -E '^\d+\.\d+.\d+-.+'; then
+    docker tag "$img:$version"
+  else
+    docker tag "$img:$version" "$img:latest"
+  fi
 }
 
 # See: https://git.io/JtdlJ

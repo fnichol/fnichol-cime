@@ -100,12 +100,19 @@ anchors:
     install_rustup_target_script: rustup target install "$env:TARGET"
 
   - &build_unix
-    build_script: cargo make build-release -- "--bin=$BIN" "--target=$TARGET"
+    build_script: |
+      if [ "${CIRRUS_CRON:-}" = "nightly" ]; then
+        export NIGHTLY_BUILD="$(date -u +%F)"
+      fi
+      cargo make build-release -- "--bin=$BIN" "--target=$TARGET"
     strip_script: $STRIP "target/$TARGET/release/$BIN"
     rename_script: cp "target/$TARGET/release/$BIN" "${BIN}-${TARGET}"
 
   - &build_windows
     build_script: |
+      if ("$env:CIRRUS_CRON" -eq "nightly") {
+        $env:NIGHTLY_BUILD = $(Get-Date ([datetime]::UtcNow) -UFormat %Y-%m-%d)
+      }
       cargo make build-release -- "--bin=$env:BIN" "--target=$env:TARGET"
     rename_script: |
       Copy-Item "target\$env:TARGET\release\$env:BIN.exe" "$env:BIN-$env:TARGET.exe"
@@ -182,10 +189,10 @@ build_bin_task:
   alias: build-bins
   only_if:
     $CIRRUS_TAG != '' || $CIRRUS_BRANCH == 'staging' || $CIRRUS_BRANCH ==
-    'trying'
+    'trying' || $CIRRUS_CRON == 'nightly'
   env:
     BIN: fnichol-cime
-    RUST_BACKTRACE: 1
+    RUST_BACKTRACE: "1"
   matrix:
     - matrix:
         - env:
@@ -274,7 +281,7 @@ ci_success_task:
 
 create_github_release_task:
   name: create-github-release
-  only_if: $CIRRUS_TAG != ''
+  only_if: $CIRRUS_TAG != '' || $CIRRUS_CRON == 'nightly'
   depends_on:
     - build-bins
   container:
@@ -282,12 +289,17 @@ create_github_release_task:
   env:
     BIN: fnichol-cime
     GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
-  install_dependencies_script: apk add curl jo jq
+  install_dependencies_script: apk add curl git jo jq
   create_github_release_script: |
+    if [ "${CIRRUS_CRON:-}" = "nightly" ]; then
+      release=nightly
+    else
+      release="$CIRRUS_TAG"
+    fi
     if ! upload_url="$(
       ./.ci/cirrus-release.sh gh_create_version_release \
         "$CIRRUS_REPO_FULL_NAME" \
-        "$CIRRUS_TAG"
+        "$release"
     )"; then
       echo "xxx Failed to create release" >&2
       exit 1
@@ -312,7 +324,7 @@ create_github_release_task:
 build_docker_image_docker_builder:
   name: build-docker-image-${BIN}
   alias: build-docker-images
-  only_if: $CIRRUS_TAG != ''
+  only_if: $CIRRUS_TAG != '' || $CIRRUS_CRON == 'nightly'
   depends_on:
     - build-bins
     - create-github-release
@@ -334,15 +346,27 @@ build_docker_image_docker_builder:
     "$cr" ci_download "build-bin-$ARCHIVE/binaries/$ARCHIVE"
     "$cr" ci_download "build-bin-$ARCHIVE/binaries/$ARCHIVE.sha256"
   build_script: |
+    if [ "${CIRRUS_CRON:-}" = "nightly" ]; then
+      release=nightly
+    else
+      release="${CIRRUS_TAG#v}"
+    fi
     ./.ci/build-docker-image.sh \
-      "$IMG" "${CIRRUS_TAG#v}" "$REPO" "$AUTHOR" "$LICENSE" "$BIN" \
+      "$IMG" "$release" "$REPO" "$AUTHOR" "$LICENSE" "$BIN" \
       "/tmp/artifacts/$ARCHIVE"
   login_script: |
     echo "$DOCKER_PASSWORD" \
       | docker login --username "$DOCKER_USERNAME" --password-stdin
   push_script: |
-    docker push "$IMG:${CIRRUS_TAG#v}"
-    docker push "$IMG:latest"
+    if [ "${CIRRUS_CRON:-}" = "nightly" ]; then
+      release=nightly
+    else
+      release="${CIRRUS_TAG#v}"
+    fi
+    docker push "$IMG:$release"
+    if echo "$release" | grep -q -E '^\d+\.\d+.\d+$'; then
+      docker push "$IMG:latest"
+    fi
 
 publish_crate_task:
   name: publish-crate-${CRATE}
@@ -362,7 +386,7 @@ publish_crate_task:
 
 publish_github_release_task:
   name: publish-github-release
-  only_if: $CIRRUS_TAG != ''
+  only_if: $CIRRUS_TAG != '' || $CIRRUS_CRON == 'nightly'
   depends_on:
     - create-github-release
     - build-docker-images
@@ -373,12 +397,17 @@ publish_github_release_task:
     GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
   install_dependencies_script: apk add curl jo jq
   publish_release_script: |
+    if [ "${CIRRUS_CRON:-}" = "nightly" ]; then
+      release=nightly
+    else
+      release="$CIRRUS_TAG"
+    fi
     ./.ci/cirrus-release.sh gh_publish_release \
-      "$CIRRUS_REPO_FULL_NAME" "$CIRRUS_TAG" CHANGELOG.md
+      "$CIRRUS_REPO_FULL_NAME" "$release" CHANGELOG.md
 
 release_success_task:
   name: release-success
-  only_if: $CIRRUS_TAG != ''
+  only_if: $CIRRUS_TAG != '' || $CIRRUS_CRON == 'nightly'
   depends_on:
     - create-github-release
     - build-docker-images
