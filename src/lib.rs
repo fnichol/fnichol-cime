@@ -12,7 +12,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! fnichol-cime = { version = "0.5.0", default-features = false }
+//! fnichol-cime = { version = "0.6.0", default-features = false }
 //! ```
 //!
 //! Note that the default features include dependencies which are required to build a CLI and are
@@ -29,7 +29,7 @@
 //! // #=> "Hello, Jane!"
 //! ```
 
-#![doc(html_root_url = "https://docs.rs/fnichol-cime/0.5.1-dev")]
+#![doc(html_root_url = "https://docs.rs/fnichol-cime/0.6.0")]
 #![deny(missing_docs)]
 
 /// Generates a greeting for a given subject.
