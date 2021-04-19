@@ -142,15 +142,17 @@ gh_delete_release() {
   local repo="$1"
   local tag="$2"
 
-  local release_id
-  release_id="$(gh_release_id_for_tag "$repo" "$tag" 2>/dev/null)"
+  local release_ids rid
+  release_ids="$(gh_release_id_for_tag "$repo" "$tag" 2>/dev/null)"
 
-  if [ -n "$release_id" ]; then
-    echo "--- Deleting GitHub pre-existing release '$tag'" >&2
-    if ! gh_rest DELETE "/repos/$repo/releases/$release_id" >/dev/null; then
-      echo "!!! Failed to delete a pre-existing release '$tag'" >&2
-      return 1
-    fi
+  if [ -n "$release_ids" ]; then
+    for rid in $release_ids; do
+      echo "--- Deleting GitHub pre-existing release '$tag' ($rid)" >&2
+      if ! gh_rest DELETE "/repos/$repo/releases/$rid" >/dev/null; then
+        echo "!!! Failed to delete a pre-existing release '$tag' ($rid)" >&2
+        return 1
+      fi
+    done
   fi
 }
 
