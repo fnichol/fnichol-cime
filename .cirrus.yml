@@ -268,8 +268,8 @@ build_bin_task:
         path: "$BIN-$TARGET.$EXT*"
       <<: *cleanup_before_upload_cache_windows
 
-ci_success_task:
-  name: ci-success
+ci_finished_task:
+  name: ci-finished
   depends_on:
     - check
     - tests
@@ -405,8 +405,8 @@ publish_github_release_task:
     ./.ci/cirrus-release.sh gh_publish_release \
       "$CIRRUS_REPO_FULL_NAME" "$release" CHANGELOG.md
 
-release_success_task:
-  name: release-success
+release_finished_task:
+  name: release-finished
   only_if: $CIRRUS_TAG != '' || $CIRRUS_CRON == 'nightly'
   depends_on:
     - create-github-release
