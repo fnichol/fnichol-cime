@@ -27,7 +27,7 @@ print_usage() {
                                   [examples: linux-x86_64, darwin-x86_64]
                                   [default: $default_platform]
         -r, --release=<RELEASE>   Release version
-                                  [examples: latest, 1.2.3]
+                                  [examples: latest, 1.2.3, nightly]
                                   [default: latest]
         -V, --version             Prints version information
 
@@ -47,7 +47,7 @@ main() {
 
   local program version author
   program="install.sh"
-  version="0.1.0"
+  version="0.2.0"
   author="Fletcher Nichol <fnichol@nichol.ca>"
 
   local gh_repo bin
@@ -238,11 +238,14 @@ asset_url() {
   bin="$2"
   release="$3"
   platform="$4"
+  if [ "$release" != "nightly" ]; then
+    release="v$release"
+  fi
 
   need_cmd awk
 
   local base_url manifest_url
-  base_url="https://github.com/$repo/releases/download/v$release"
+  base_url="https://github.com/$repo/releases/download/$release"
   manifest_url="$base_url/$bin.manifest.txt"
 
   local tmpfile
