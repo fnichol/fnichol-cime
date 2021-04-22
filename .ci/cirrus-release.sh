@@ -1,5 +1,5 @@
 #!/usr/bin/env sh
-# shellcheck shell=sh disable=SC2039
+# shellcheck disable=SC3043
 
 main() {
   set -eu
@@ -154,6 +154,39 @@ gh_delete_release() {
       fi
     done
   fi
+}
+
+gh_download() {
+  local repo="$1"
+  shift
+  local tag="$1"
+  shift
+  local asset="$1"
+  shift
+
+  need_cmd curl
+  need_cmd jq
+
+  if ! gh_rest GET "/repos/$repo/releases/tags/$tag" >/tmp/response; then
+    echo "!!! Failed to find a release for tag $tag" >&2
+    return 1
+  fi
+
+  local dl_url
+  dl_url="$(
+    jq -r ".assets[] | select(.name == \"$asset\") | .browser_download_url" \
+      </tmp/response
+  )"
+
+  echo "--- Downlading GitHub asset '$asset' from '$repo' ($tag)" >&2
+
+  curl \
+    --fail \
+    -X GET \
+    --location \
+    --output "$asset" \
+    "$dl_url" \
+    "${@:---}"
 }
 
 gh_publish_release() {
