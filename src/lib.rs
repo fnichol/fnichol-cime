@@ -5,7 +5,7 @@
 //! This crate executes a highly specialized algorithm to dynamically generate a greeting in
 //! english to a given subject. It is serious business.
 //!
-//! # Library Usage
+//! ## Usage
 //!
 //! This crate is on [crates.io](https://crates.io/crates/fnichol-cime) and can be used by adding
 //! the crate to your dependencies in your project's `Cargo.toml` file:
@@ -18,9 +18,9 @@
 //! Note that the default features include dependencies which are required to build a CLI and are
 //! not needed for the library.
 //!
-//! # Library Examples
+//! ## Examples
 //!
-//! ## Example: greeting a human
+//! ### Example: greeting a human
 //!
 //! Assuming we have a human named `Jane`:
 //!

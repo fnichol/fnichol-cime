@@ -1,35 +1,42 @@
-# fnichol-cime
+<h1 align="center">
+  <br/>
+  fnichol-cime
+  <br/>
+</h1>
 
-A demonstration of a Rust CI build/test/release workflow supporting
-multi-platform testing, binary builds, Docker image building, and Crates.io
-publishing.
+<h4 align="center">
+  A demonstration of a Rust CI build/test/release workflow supporting
+  multi-platform testing, binary builds, Docker image building, and Crates.io
+  publishing.
+</h4>
 
-|                  |                                                                                    |
-| ---------------: | ---------------------------------------------------------------------------------- |
-|               CI | [![CI Status][badge-ci-overall]][ci] [![Bors enabled][badge-bors]][bors-dashboard] |
-|   Latest Version | [![Latest version][badge-version]][crate]                                          |
-|    Documentation | [![Documentation][badge-docs]][docs]                                               |
-|  Crate Downloads | [![Crate downloads][badge-crate-dl]][crate]                                        |
-| GitHub Downloads | [![Github downloads][badge-github-dl]][github-releases]                            |
-|     Docker Pulls | [![Docker pulls][badge-docker-pulls]][docker]                                      |
-|          License | [![Crate license][badge-license]][github]                                          |
+|                  |                                                                                          |
+| ---------------: | ---------------------------------------------------------------------------------------- |
+|               CI | [![CI Status][badge-ci-overall]][ci]<br /> [![Bors enabled][badge-bors]][bors-dashboard] |
+|   Latest Version | [![Latest version][badge-version]][crate]                                                |
+|    Documentation | [![Documentation][badge-docs]][docs]                                                     |
+|  Crate Downloads | [![Crate downloads][badge-crate-dl]][crate]                                              |
+| GitHub Downloads | [![Github downloads][badge-github-dl]][github-releases]                                  |
+|     Docker Pulls | [![Docker pulls][badge-docker-pulls]][docker]                                            |
+|          License | [![Crate license][badge-license]][github]                                                |
 
-**Table of Contents**
+<details>
+<summary><strong>Table of Contents</strong></summary>
 
 <!-- toc -->
 
 - [CLI](#cli)
-- [CLI Usage](#cli-usage)
-- [CLI Installation](#cli-installation)
-  - [Pre-Built Binaries](#pre-built-binaries)
-  - [Docker Image](#docker-image)
-  - [Cargo Install](#cargo-install)
-  - [Building From Source](#building-from-source)
-  - [Building from source](#building-from-source-1)
+  - [Usage](#usage)
+  - [Installation](#installation)
+    - [install.sh (Pre-Built Binaries)](#installsh-pre-built-binaries)
+    - [GitHub Releasees (Pre-Built Binaries)](#github-releasees-pre-built-binaries)
+    - [Docker Image](#docker-image)
+    - [Cargo Install](#cargo-install)
+    - [From Source](#from-source)
 - [Library](#library)
-- [Library Usage](#library-usage)
-- [Library Examples](#library-examples)
-  - [Example: greeting a human](#example-greeting-a-human)
+  - [Usage](#usage-1)
+  - [Examples](#examples)
+    - [Example: greeting a human](#example-greeting-a-human)
 - [CI Status](#ci-status)
   - [Build (main branch)](#build-main-branch)
   - [Test (main branch)](#test-main-branch)
@@ -43,9 +50,11 @@ publishing.
 
 <!-- tocstop -->
 
+</details>
+
 ## CLI
 
-## CLI Usage
+### Usage
 
 There's not much to this program. To greet the currently logged in user, run:
 
@@ -60,35 +69,72 @@ For more help and full usage, use the `--help` or `-h` flags:
 > fnichol-cime --help
 ```
 
-## CLI Installation
+### Installation
 
-### Pre-Built Binaries
+#### install.sh (Pre-Built Binaries)
 
-There are pre-built binaries available for macOS, Windows, FreeBSD, and a
-variety of Linux architectures available through the project's [GitHub
-releases][github-releases].
+An installer is provided at <https://fnichol.github.io/fnichol-cime/install.sh>
+which installs a suitable pre-built binary for common systems such as Linux,
+macOS, Windows, and FreeBSD. It can be downloaded and run locally or piped into
+a shell interpreter in the "curl-bash" style as shown below. Note that if you're
+opposed to this idea, feel free to check some of the alternatives below.
 
-### Docker Image
+To install the latest release for your system into `$HOME/bin`:
 
-If a Docker image is more your speed, there is a minimal image published to
-Docker Hub at [fnichol/fnichol-cime][docker]. The entrypoint invokes the binary
-directly, so any arguments to `docker run` will be passed to the program. For
-example, to display the full help usage:
+```console
+> curl -sSf https://fnichol.github.io/fnichol-cime/install.sh | sh
+```
 
-```sh
+When the installer is run as `root` the installation directory defaults to
+`/usr/local/bin`:
+
+```console
+> curl -sSf https://fnichol.github.io/fnichol-cime/install.sh | sudo sh
+```
+
+A [nightly] release built from `HEAD` of the main branch is available which can
+also be installed:
+
+```console
+> curl -sSf https://fnichol.github.io/fnichol-cime/install.sh \
+    | sudo sh -s -- --release=nightly
+```
+
+For a full set of options, check out the help usage with:
+
+```console
+> curl -sSf https://fnichol.github.io/fnichol-cime/install.sh \
+    | sudo sh -s -- --help
+```
+
+#### GitHub Releasees (Pre-Built Binaries)
+
+Each release comes with binary artifacts published in [GitHub
+Releases][github-releases]. The `install.sh` program downloads its artifacts
+from this location so this serves as a manual alternative. Each artifact ships
+with MD5 and SHA256 checksums to help verify the artifact on a target system.
+
+#### Docker Image
+
+A minimal image ships with each release (including a [nightly] built version
+from `HEAD` of the main branch) published to [Docker Hub][docker]. The
+entrypoint invokes the binary directly, so any arguments to `docker run` will be
+passed to the program. For example, to display the full help usage:
+
+```console
 > docker run fnichol/fnichol-cime --help
 ```
 
-### Cargo Install
+#### Cargo Install
 
-If [Rust](https://rustup.rs/) is installed, then installing with Cargo is
-straight forward with:
+If [Rust](https://rustup.rs/) is installed on your system, then installing with
+Cargo is straight forward with:
 
 ```console
-$ cargo install fnichol-cime
+> cargo install fnichol-cime
 ```
 
-### Building From Source
+#### From Source
 
 To install from source, you can clone the Git repository, build with Cargo and
 copy the binary into a destination directory. This will build the project from
@@ -96,24 +142,10 @@ the latest commit on the main branch, which may not correspond to the latest
 stable release:
 
 ```console
-$ git clone https://github.com/fnichol/fnichol-cime.git
-$ cd fnichol-cime
-$ cargo build --release
-$ cp ./target/release/fnichol-cime /dest/path/
-```
-
-### Building from source
-
-If you want (or need) to build the CLI from source, the following should not
-take too long. Note that you'll need a version of Rust (and Cargo which ships
-with the Rust distributions) before running:
-
-```sh
 > git clone https://github.com/fnichol/fnichol-cime.git
-> cd fnichol-cime/cli
+> cd fnichol-cime
 > cargo build --release
-# test it out
-> ./target/release/fnichol-cime
+> cp ./target/release/fnichol-cime /dest/path/
 ```
 
 ---
@@ -123,7 +155,7 @@ with the Rust distributions) before running:
 This crate executes a highly specialized algorithm to dynamically generate a
 greeting in english to a given subject. It is serious business.
 
-## Library Usage
+### Usage
 
 This crate is on [crates.io](https://crates.io/crates/fnichol-cime) and can be
 used by adding the crate to your dependencies in your project's `Cargo.toml`
@@ -137,9 +169,9 @@ fnichol-cime = { version = "0.6.0", default-features = false }
 Note that the default features include dependencies which are required to build
 a CLI and are not needed for the library.
 
-## Library Examples
+### Examples
 
-### Example: greeting a human
+#### Example: greeting a human
 
 Assuming we have a human named `Jane`:
 
@@ -290,3 +322,4 @@ licensed as above, without any additional terms or conditions.
 [issues]: https://github.com/fnichol/fnichol-cime/issues
 [license]:
   https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/LICENSE.txt
+[nightly]: https://github.com/fnichol/fnichol-cime/releases/tag/nightly
