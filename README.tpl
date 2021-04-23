@@ -72,14 +72,14 @@ also be installed:
 
 ```console
 > curl -sSf https://fnichol.github.io/fnichol-cime/install.sh \
-    | sudo sh -s -- --release=nightly
+    | sh -s -- --release=nightly
 ```
 
 For a full set of options, check out the help usage with:
 
 ```console
 > curl -sSf https://fnichol.github.io/fnichol-cime/install.sh \
-    | sudo sh -s -- --help
+    | sh -s -- --help
 ```
 
 #### GitHub Releasees (Pre-Built Binaries)
