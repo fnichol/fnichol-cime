@@ -256,12 +256,11 @@ licensed as above, without any additional terms or conditions.
 [badge-version]:
   https://img.shields.io/crates/v/fnichol-cime.svg?style=flat-square
 [bors-dashboard]: https://app.bors.tech/repositories/32089
-[changelog]:
-  https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/CHANGELOG.md
+[changelog]: https://github.com/fnichol/fnichol-cime/blob/main/CHANGELOG.md
 [ci]: https://cirrus-ci.com/github/fnichol/fnichol-cime
 [ci-staging]: https://cirrus-ci.com/github/fnichol/fnichol-cime/staging
 [code-of-conduct]:
-  https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/CODE_OF_CONDUCT.md
+  https://github.com/fnichol/fnichol-cime/blob/main/CODE_OF_CONDUCT.md
 [crate]: https://crates.io/crates/fnichol-cime
 [docker]: https://hub.docker.com/r/fnichol/fnichol-cime
 [docs]: https://docs.rs/fnichol-cime
@@ -269,6 +268,5 @@ licensed as above, without any additional terms or conditions.
 [github]: https://github.com/fnichol/fnichol-cime
 [github-releases]: https://github.com/fnichol/fnichol-cime/releases
 [issues]: https://github.com/fnichol/fnichol-cime/issues
-[license]:
-  https://github.com/fnichol/fnichol-cime/blob/main/fnichol-cime/LICENSE.txt
+[license]: https://github.com/fnichol/fnichol-cime/blob/main/LICENSE.txt
 [nightly]: https://github.com/fnichol/fnichol-cime/releases/tag/nightly
