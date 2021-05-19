@@ -195,6 +195,11 @@ test_task:
           <<: *base_macos
         - env:
             TARGET: x86_64-unknown-freebsd
+            # Temporary workaround for error `error: sysinfo not supported on
+            # this platform` seen on FreeBSD platforms, affecting Rustup
+            #
+            # References: https://github.com/rust-lang/rustup/issues/2774
+            RUSTUP_IO_THREADS: 1
           freebsd_instance:
             image_family: freebsd-11-4
           <<: *base_freebsd
@@ -261,6 +266,11 @@ build_bin_task:
           <<: *build_bin_unix
           archive_script: zip "$BIN-$TARGET" "$BIN-$TARGET"
         - env:
+            # Temporary workaround for error `error: sysinfo not supported on
+            # this platform` seen on FreeBSD platforms, affecting Rustup
+            #
+            # References: https://github.com/rust-lang/rustup/issues/2774
+            RUSTUP_IO_THREADS: 1
             TARGET: x86_64-unknown-freebsd
             STRIP: strip
             EXT: tar.gz
