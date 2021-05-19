@@ -99,7 +99,7 @@ anchors:
   - &install_target_windows
     install_rustup_target_script: rustup target install "$env:TARGET"
 
-  - &build_unix
+  - &build_bin_unix
     build_script: |
       if [ "${CIRRUS_TAG:-}" = "nightly" ]; then
         export NIGHTLY_BUILD="$(date -u +%F)"
@@ -108,7 +108,21 @@ anchors:
     strip_script: $STRIP "target/$TARGET/release/$BIN"
     rename_script: cp "target/$TARGET/release/$BIN" "${BIN}-${TARGET}"
 
-  - &build_windows
+  - &build_lib_unix
+    build_script: |
+      args=""
+      if [ -n "${FEATURES:-}" ]; then
+        args="--features $FEATURES"
+      fi
+      if [ -n "${NO_DEFAULT_FEATURES:-}" ]; then
+        args="$args --no-default-features"
+      fi
+      if [ -n "${ALL_FEATURES:-}" ]; then
+        args="$args --all-features"
+      fi
+      cargo make build-release -- "--lib=$LIB" "--target=$TARGET" $args
+
+  - &build_bin_windows
     build_script: |
       if ("$env:CIRRUS_TAG" -eq "nightly") {
         $env:NIGHTLY_BUILD = $(Get-Date ([datetime]::UtcNow) -UFormat %Y-%m-%d)
@@ -116,6 +130,20 @@ anchors:
       cargo make build-release -- "--bin=$env:BIN" "--target=$env:TARGET"
     rename_script: |
       Copy-Item "target\$env:TARGET\release\$env:BIN.exe" "$env:BIN-$env:TARGET.exe"
+
+  - &build_lib_windows
+    build_script: |
+      $args = ""
+      if ("$env:FEATURES") {
+        $args = "--features $env:FEATURES"
+      }
+      if ("$env:NO_DEFAULT_FEATURES") {
+        $args = "$args --no-default-features"
+      }
+      if ("$env:ALL_FEATURES") {
+        $args = "$args --all-features"
+      }
+      cargo make build-release -- "--bin=$env:BIN" "--target=$env:TARGET" $args
 
   - &cleanup_before_upload_cache_unix
     cleanup_before_upload_cache_script: rm -rf "$CARGO_HOME/registry/index"
@@ -167,6 +195,11 @@ test_task:
           <<: *base_macos
         - env:
             TARGET: x86_64-unknown-freebsd
+            # Temporary workaround for error `error: sysinfo not supported on
+            # this platform` seen on FreeBSD platforms, affecting Rustup
+            #
+            # References: https://github.com/rust-lang/rustup/issues/2774
+            RUSTUP_IO_THREADS: 1
           freebsd_instance:
             image_family: freebsd-11-4
           <<: *base_freebsd
@@ -217,7 +250,7 @@ build_bin_task:
             - test-stable-x86_64-unknown-linux-gnu
           <<: *base_linux
           <<: *install_target_unix
-          <<: *build_unix
+          <<: *build_bin_unix
           archive_script: tar czf "$BIN-$TARGET.$EXT" "$BIN-$TARGET"
         - env:
             TARGET: x86_64-apple-darwin
@@ -230,9 +263,14 @@ build_bin_task:
             - test-stable-x86_64-apple-darwin
           <<: *base_macos
           <<: *install_target_unix
-          <<: *build_unix
+          <<: *build_bin_unix
           archive_script: zip "$BIN-$TARGET" "$BIN-$TARGET"
         - env:
+            # Temporary workaround for error `error: sysinfo not supported on
+            # this platform` seen on FreeBSD platforms, affecting Rustup
+            #
+            # References: https://github.com/rust-lang/rustup/issues/2774
+            RUSTUP_IO_THREADS: 1
             TARGET: x86_64-unknown-freebsd
             STRIP: strip
             EXT: tar.gz
@@ -243,7 +281,7 @@ build_bin_task:
             - test-stable-x86_64-unknown-freebsd
           <<: *base_freebsd
           <<: *install_target_unix
-          <<: *build_unix
+          <<: *build_bin_unix
           archive_script: tar czf "$BIN-$TARGET.$EXT" "$BIN-$TARGET"
       checksums_script: ./.ci/build-checksums.sh "$BIN-$TARGET.$EXT"
       binaries_artifacts:
@@ -259,7 +297,7 @@ build_bin_task:
         - test-stable-x86_64-pc-windows-msvc
       <<: *base_windows
       <<: *install_target_windows
-      <<: *build_windows
+      <<: *build_bin_windows
       archive_script: |
         Compress-Archive "$env:BIN-$env:TARGET.exe" "$env:BIN-$env:TARGET.$env:EXT"
       checksums_script:
@@ -288,7 +326,7 @@ create_github_release_task:
     image: alpine:3
   env:
     BIN: fnichol-cime
-    GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
+    GITHUB_TOKEN: ENCRYPTED[78c00056ec53c8575696ccc698a8252991e4805f2d8ab303c89a002f9e05aaf5c848f64c0335dc2892b3ac2318fcaa07]
   install_dependencies_script: apk add curl git jo jq
   create_github_release_script: |
     if ! upload_url="$(
@@ -379,7 +417,7 @@ publish_github_release_task:
   container:
     image: alpine:3
   env:
-    GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
+    GITHUB_TOKEN: ENCRYPTED[78c00056ec53c8575696ccc698a8252991e4805f2d8ab303c89a002f9e05aaf5c848f64c0335dc2892b3ac2318fcaa07]
   install_dependencies_script: apk add curl jo jq
   publish_release_script: |
     ./.ci/cirrus-release.sh gh_publish_release \
@@ -404,7 +442,7 @@ trigger_nightly_release_task:
   container:
     image: alpine:3
   env:
-    GITHUB_TOKEN: ENCRYPTED[ecc4ca0e5df9225981292126d56d588b2c2ccbc2fd73ad4fc92696cf6ef2613f03b7776b2b1c4fd3586381c0a796f041]
+    GITHUB_TOKEN: ENCRYPTED[78c00056ec53c8575696ccc698a8252991e4805f2d8ab303c89a002f9e05aaf5c848f64c0335dc2892b3ac2318fcaa07]
   install_dependencies_script: apk add curl git jo jq
   trigger_release_script:
     ./.ci/cirrus-release.sh gh_update_tag "$CIRRUS_REPO_FULL_NAME" nightly
